@@ -1,37 +1,66 @@
-from kivy.app import App
+
+from kivymd.app import MDApp
+from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.lang.builder import Builder
 from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.relativelayout import RelativeLayout
 
-from kivy.config import Config
+kv = '''
+ScreenManager:
+    Screen1:
+    Screen2:
+
+<Screen1>:
+    name: 's1'
+    Button:
+        text: "swap"
+        size_hint_x: 0.2
+        size_hint_y: 0.2
+        pos_hint: {"top":1}
+        on_release: root.manager.current = 's2'
 
 
-class MainInterface(App):
+<Screen2>:
+    name: 's2'
+    Button:
+        text: "add"
+        size_hint_x: 0.2
+        size_hint_y: 0.2
+        pos_hint: {"top":1}
+        on_release: app.on_button_press()
+
+    BoxLayout:
+        id: pool
+        pos_hint: {"bottom":1}
+
+        size_hint_x: 0.8
+        size_hint_y: 0.8
+
+'''
+
+class Screen1(Screen):
+    pass
+
+class Screen2(Screen):
+    pass
+
+
+
+
+class MainAPP(MDApp):
     def build(self):
-        button_names = [
-        ] 
-
-        main_layout = RelativeLayout(size =(800, 600))
-
-        buttons = [
-            "Setings",
-            "Add Words",
-            "Edit Words",
-            "Shafle Learn",
-            "Timer Learn"
-        ]
-        h_layout = BoxLayout()
+        Builder.load_string(kv)
+        sm = ScreenManager()
+        sm.add_widget(Screen1(name="s1"))
+        sm.add_widget(Screen2(name="s2"))
+        return sm
 
 
+    def on_button_press(self, *instance):
+        print(self.root.get_screen('s2').ids.pool)
+        self.but = Button(text="1",size_hint=(0.1,0.1))
+        self.root.get_screen('s2').ids.pool.add_widget(self.but)
 
-        main_layout.add_widget(h_layout)
-        return main_layout
-
-
-    def on_button_press(self, instance):
-        print(instance.text)
 
 
 if __name__ == "__main__":
-    MainInterface().run()
+    MainAPP().run()
