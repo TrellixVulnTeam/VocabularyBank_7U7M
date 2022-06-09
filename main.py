@@ -55,25 +55,6 @@ class BooksScreen(Screen):
     icon_filter_size = StringProperty("30sp")
     icon_search_size = StringProperty("30sp")
     font_size_search_field = StringProperty("26sp")
-    table_creator = [
-            """CREATE TABLE IF NOT EXISTS """,
-            """(
-                "index"	INTEGER NOT NULL UNIQUE,
-                "word"	TEXT NOT NULL UNIQUE,
-                "transcription"	TEXT,
-                "translate"	TEXT NOT NULL UNIQUE,
-                "association"	TEXT,
-                "status"	INTEGER NOT NULL,
-                PRIMARY KEY("index" AUTOINCREMENT)   
-            )""",
-
-            """
-            CREATE TABLE IF NOT EXISTS Data_name_of_books (
-                "db_name"	TEXT NOT NULL UNIQUE,
-                "size"	INTEGER NOT NULL,
-                "index"	INTEGER NOT NULL UNIQUE,
-                PRIMARY KEY("index" AUTOINCREMENT)
-            );"""]
     
     def load_books(self):
         self.create_data_base()

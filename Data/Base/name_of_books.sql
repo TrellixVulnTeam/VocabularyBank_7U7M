@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Data_name_of_books (
+    "db_name"	TEXT NOT NULL UNIQUE,
+    "size"	INTEGER NOT NULL,
+    "index"	INTEGER NOT NULL UNIQUE,
+    PRIMARY KEY("index" AUTOINCREMENT)
+);
