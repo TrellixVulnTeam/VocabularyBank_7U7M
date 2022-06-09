@@ -3,6 +3,7 @@ from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.lang.builder import Builder
 from kivy.uix.button import Button
+from kivy.uix.popup import Popup
 
 kv = '''
 ScreenManager:
@@ -56,9 +57,12 @@ class MainAPP(MDApp):
 
 
     def on_button_press(self, *instance):
-        print(self.root.get_screen('s2').ids.pool)
-        self.but = Button(text="1",size_hint=(0.1,0.1))
-        self.root.get_screen('s2').ids.pool.add_widget(self.but)
+        NewDialog = Popup(
+            title="",
+            size_hint=(None,None),
+            size=(220,220),
+        )
+        NewDialog.open()
 
 
 
