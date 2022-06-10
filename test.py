@@ -22,12 +22,21 @@ ScreenManager:
 
 <Screen2>:
     name: 's2'
-    Button:
-        text: "add"
-        size_hint_x: 0.2
-        size_hint_y: 0.2
-        pos_hint: {"top":1}
-        on_release: app.on_button_press()
+    BoxLayout:
+        orientation: "horizontal"
+        Button:
+            text: "add"
+            size_hint_x: 0.2
+            size_hint_y: 0.2
+            pos_hint: {"top":1}
+            on_release: app.add_button_press()
+
+        Button:
+            text: "remuve"
+            size_hint_x: 0.2
+            size_hint_y: 0.2
+            pos_hint: {"top":1}
+            on_release: app.del_button_press()
 
     BoxLayout:
         id: pool
@@ -48,6 +57,8 @@ class Screen2(Screen):
 
 
 class MainAPP(MDApp):
+    list_buttons = []
+
     def build(self):
         Builder.load_string(kv)
         sm = ScreenManager()
@@ -55,14 +66,14 @@ class MainAPP(MDApp):
         sm.add_widget(Screen2(name="s2"))
         return sm
 
+    def del_button_press(self, *instance):
+        for but in self.list_buttons:
+            self.root.get_screen("s2").remove_widget(but)
 
-    def on_button_press(self, *instance):
-        NewDialog = Popup(
-            title="",
-            size_hint=(None,None),
-            size=(220,220),
-        )
-        NewDialog.open()
+    def add_button_press(self, *instance):
+        but = Button(text="{}".format(len(self.list_buttons)+1),size_hint=(0.1,0.1))
+        self.list_buttons.append(but)
+        self.root.get_screen("s2").ids.pool.add_widget(but)
 
 
 
