@@ -68,7 +68,7 @@ class MainAPP(MDApp):
 
     def del_button_press(self, *instance):
         for but in self.list_buttons:
-            self.root.get_screen("s2").remove_widget(but)
+            self.root.get_screen("s2").ids.pool.remove_widget(but)
 
     def add_button_press(self, *instance):
         but = Button(text="{}".format(len(self.list_buttons)+1),size_hint=(0.1,0.1))
