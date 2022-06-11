@@ -57,7 +57,7 @@ class Main(MDApp):
     
 
     def swap_screen(self,*screen_name_index):
-        screen_name = ['menu','statistic','books','edit'] 
+        screen_name = self.screens 
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
         pprint("[Log   ]"f"@{self.screen_is_displayed}"+" >> "+f"@{screen_name[int(screen_name_index[0])-1]}")
         self.screen_is_displayed = screen_name[int(screen_name_index[0])-1]
@@ -108,23 +108,19 @@ class Main(MDApp):
 
 
     def add_book_func(self, *arg):   
-
         but = ThreeLineAvatarIconListItem(
             text="{}".format( self.new_book_name ),
             secondary_text="{} words in it".format( self.new_book_word_number ),
-            on_release= lambda x: self.swap_to_internal_book_screen()
+            on_release= lambda x: self.swap_screen(('5'))
         )
-
         del_item = IconLeftWidget(
             icon="delete",
             on_release= lambda x,y = self.new_book_name,z = but: self.del_book_func(y,z)
         )
-        
         edit_item= IconRightWidget(
             icon="book-edit",
             on_release= lambda x: self.edit_menu
         )
-
         but.add_widget(del_item)
         but.add_widget(edit_item)
         self.root.get_screen("books").ids.books_add_list.add_widget(but)
@@ -139,12 +135,13 @@ class Main(MDApp):
         sm = ScreenManager()
 
         Builder.load_file("Libs//uix//kv//modules//custom_bottom_navigation.kv")
+        self.screens = ['menu','statistic','books','edit','bookInternal']
 
         sm.add_widget(MenuScreen(name="menu"))
         sm.add_widget(StatisticScreen(name="statistic"))
         sm.add_widget(EdittingScreen(name="edit"))
         sm.add_widget(BooksScreen(name="books"))
-
+        sm.add_widget(InternalMenuBookScreen(name="bookInternal"))
         return sm
 
 

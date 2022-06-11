@@ -1,0 +1,57 @@
+#:import  kivymd.uix.list
+
+
+<InternalMenuBookScreen>:
+    name: 'bookInternal'
+    BoxLayout: 
+        id: left_pool
+        orientation: "vertical"
+        pos_hint: {'left':1}
+        Button:
+            pos_hint: {'top':1,'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: 0.95
+            size_hint_y: 0.06
+            text: "back"
+            on_release: app.swap_screen('3')
+            
+
+    BoxLayout:
+        id: word_list
+        orientation: "vertical"
+        size_hint_y: 0.84
+        size_hint_x: 0.92
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        BoxLayout:
+            id: top_partical
+            pos_hint: {"top": 1}
+            orientation: 'horizontal'
+            size_hint_x: 1
+            size_hint_y: 0.1
+            
+            MDIconButton:
+                pos_hint: {"right": 1}
+                user_font_size: root.icon_filter_size
+                id: filters_menu
+                icon: "filter-menu"
+
+
+            MDTextField:
+                id: search_field
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                font_size: root.font_size_search_field
+                multiline: False
+                hint_text: 'Search Book'
+                #on_text: root.set_list_md_icons(self.text, True)
+                
+            MDIconButton:
+                id: search
+                icon: 'magnify'
+                user_font_size: root.icon_search_size
+                pos_hint: {"left": 1}
+
+        ScrollView:
+            size_hint_x: 0.9
+            size_hint_y: 0.82
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            MDList:
+                id: books_add_list
