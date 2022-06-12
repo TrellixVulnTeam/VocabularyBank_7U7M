@@ -1,33 +1,53 @@
-#:import  kivymd.uix.list
-
 
 <InternalMenuBookScreen>:
     name: 'bookInternal'
-    BoxLayout: 
+    BoxLayout:
+        size_hint_y: 1
+        size_hint_x: 0.06
         id: left_pool
         orientation: "vertical"
-        pos_hint: {'left':1}
-        Button:
-            pos_hint: {'top':1,'center_x': 0.5, 'center_y': 0.5}
-            size_hint_x: 0.95
-            size_hint_y: 0.06
-            text: "back"
-            on_release: app.swap_screen('3')
-            
+        pos_hint: {'left':1,'top':1}
+        BoxLayout:
+            size_hint_x: 1
+            size_hint_y: 0.2
+            pos_hint: {'top':1}
+            MDIconButton:
+                icon: "backburger"
+                user_font_size: root.icon_left_menu_botton_size
+                pos_hint: {'center_x': 0.5, 'top':1}
+                on_release: app.swap_screen('3')
+
+        BoxLayout:
+            size_hint_x: 1
+            size_hint_y: 0.6
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+        BoxLayout:
+            pos_hint: {'bottom':1}
+            size_hint_x: 1
+            size_hint_y: 0.2
+            MDIconButton:
+                icon: "plus"
+                user_font_size: root.icon_left_menu_botton_size
+                pos_hint: {'center_x': 0.5, 'bottom':1}
+                on_release: root.add_word_func()
+
+
+
 
     BoxLayout:
         id: word_list
         orientation: "vertical"
         size_hint_y: 0.84
         size_hint_x: 0.92
-        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        pos_hint: {'right':1,'top':1}
         BoxLayout:
             id: top_partical
             pos_hint: {"top": 1}
             orientation: 'horizontal'
             size_hint_x: 1
             size_hint_y: 0.1
-            
             MDIconButton:
                 pos_hint: {"right": 1}
                 user_font_size: root.icon_filter_size
@@ -42,7 +62,6 @@
                 multiline: False
                 hint_text: 'Search Book'
                 #on_text: root.set_list_md_icons(self.text, True)
-                
             MDIconButton:
                 id: search
                 icon: 'magnify'
@@ -50,8 +69,9 @@
                 pos_hint: {"left": 1}
 
         ScrollView:
+            id: list_view
             size_hint_x: 0.9
             size_hint_y: 0.82
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDList:
-                id: books_add_list
+
+            WordsList:

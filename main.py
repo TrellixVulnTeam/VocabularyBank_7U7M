@@ -1,3 +1,4 @@
+from distutils.command.build import build
 from logging import root
 from re import X
 import sqlite3
@@ -19,6 +20,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.popup import Popup
+from kivy.uix.gridlayout import GridLayout
 
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
@@ -30,12 +32,13 @@ from Libs.programclass.Screens.EdittingScreen import EdittingScreen
 from Libs.programclass.Screens.InternalMenuBookScreen import InternalMenuBookScreen
 from Libs.programclass.Screens.MenuScreen import MenuScreen
 from Libs.programclass.Screens.StatisticScreen import StatisticScreen
-from Libs.programclass.modules.custom_bottom_navigation import custom_bottom_navigation
+from Libs.programclass.modules.CustomBottomNavigation import CustomBottomNavigation
+from Libs.programclass.modules.CustomList import CustomList
+from Libs.programclass.modules.WordsList import WordsList
 
 #from Libs.uix.kv import ScreenManagerKV,MenuScreen, EdittingScreen,BooksScreen,StatisticScreen
 
-class Dialog_book_add(Widget):
-    pass
+
 
 
 class Main(MDApp):
@@ -54,13 +57,70 @@ class Main(MDApp):
     icon_button_bot_menu_size = StringProperty("34sp")
     icon_main_menu_size = StringProperty("42sp")
 
-    
 
-    def swap_screen(self,*screen_name_index):
-        screen_name = self.screens 
+    def build(self):
+        Builder.load_file("Libs//uix//kv//ScreenManagerKV.kv")
+        Builder.load_file("Libs//uix//kv//MenuScreen.kv")
+        Builder.load_file("Libs//uix//kv//StatisticScreen.kv")
+        Builder.load_file("Libs//uix//kv//BooksScreen.kv")
+        Builder.load_file("Libs//uix//kv//EdittingScreen.kv")
+        Builder.load_file("Libs//uix//kv//InternalMenuBookScreen.kv")
+        sm = ScreenManager()
+
+        Builder.load_file("Libs//uix//kv//modules//CustomBottomNavigation.kv")
+        Builder.load_file("Libs//uix//kv//modules//CustomList.kv")
+        Builder.load_file("Libs//uix//kv//modules//WordsList.kv")
+        self.screens = ['menu','statistic','books','edit','bookInternal']
+
+        sm.add_widget(MenuScreen(name="menu"))
+        sm.add_widget(StatisticScreen(name="statistic"))
+        sm.add_widget(EdittingScreen(name="edit"))
+        sm.add_widget(BooksScreen(name="books"))
+        sm.add_widget(InternalMenuBookScreen(name="bookInternal"))
+        return sm  
+
+
+
+    def swap_screen(self,screen_name_index,*name_book):
+        screen_name = self.screens
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
+        if screen_name_index[0] == '5':
+            pprint(name_book)
+            self.clear_internal_screen()
+            self.load_words(name_book)
+
         pprint("[Log   ]"f"@{self.screen_is_displayed}"+" >> "+f"@{screen_name[int(screen_name_index[0])-1]}")
         self.screen_is_displayed = screen_name[int(screen_name_index[0])-1]
+
+
+    def clear_internal_screen(self):
+        pprint(self.root.get_screen("bookInternal").ids.list_view.children[0])
+        ob = self.root.get_screen("bookInternal").ids.list_view
+        ob.remove_widget(ob.children[0])
+        ob.add_widget(WordsList())
+
+
+    def add_word_into_internal(self,word):
+        but = CustomList()
+        self.root.get_screen("bookInternal").ids.list_view.children[0].add_widget(but)
+
+
+    def build_screen(self,data):
+        pprint(data)
+        for word in data:
+            self.add_word_into_internal(word)
+
+
+    def load_words(self, table_name):
+        if self.is_tabele_with_name(table_name):
+            conn = sqlite3.connect("Data/Base/Books.db")
+            cursor = conn.cursor()
+            data = cursor.execute("SELECT * FROM " + table_name[0])
+            data = data.fetchall()
+            conn.close()
+            self.build_screen(data)
+
+
 
     def del_book_func(self,bookName,wd_for_del):
         conn = sqlite3.connect("Data/Base/Books.db")
@@ -74,14 +134,14 @@ class Main(MDApp):
 
     def load_books(self):
         if self.load_books_triger == False:
-            self.new_book_word_number = 0
-            self.new_book_name = ''
+            new_book_word_number = 0
+            new_book_name = ''
             self.create_data_base()
             data = self.get_infor_from_db()
             for book in data:
-                self.new_book_name = book[0]
-                self.new_book_word_number = book[1]
-                self.add_book_func()
+                new_book_name = book[0]
+                new_book_word_number = book[1]
+                self.add_book_func(new_book_name,new_book_word_number)
             pprint(data)
             self.load_books_triger = True
         else:
@@ -107,15 +167,15 @@ class Main(MDApp):
         pass
 
 
-    def add_book_func(self, *arg):   
+    def add_book_func(self, new_book_name,new_book_word_number):   
         but = ThreeLineAvatarIconListItem(
-            text="{}".format( self.new_book_name ),
-            secondary_text="{} words in it".format( self.new_book_word_number ),
-            on_release= lambda x: self.swap_screen(('5'))
+            text="{}".format( new_book_name ),
+            secondary_text="{} words in it".format( new_book_word_number ),
+            on_release= lambda x: self.swap_screen(('5'),new_book_name)
         )
         del_item = IconLeftWidget(
             icon="delete",
-            on_release= lambda x,y = self.new_book_name,z = but: self.del_book_func(y,z)
+            on_release= lambda x,y = new_book_name,z = but: self.del_book_func(y,z)
         )
         edit_item= IconRightWidget(
             icon="book-edit",
@@ -126,23 +186,18 @@ class Main(MDApp):
         self.root.get_screen("books").ids.books_add_list.add_widget(but)
 
 
-    def build(self):
-        Builder.load_file("Libs//uix//kv//ScreenManagerKV.kv")
-        Builder.load_file("Libs//uix//kv//MenuScreen.kv")
-        Builder.load_file("Libs//uix//kv//StatisticScreen.kv")
-        Builder.load_file("Libs//uix//kv//BooksScreen.kv")
-        Builder.load_file("Libs//uix//kv//EdittingScreen.kv")
-        sm = ScreenManager()
+    def is_tabele_with_name(self,name):
+        conn = sqlite3.connect("Data/Base/Books.db")
+        cursor = conn.cursor()
+        for item in cursor.execute("SELECT db_name FROM Data_name_of_books").fetchall():
+            if name == item:
+                conn.close()
+                return True
+            else:
+                continue
 
-        Builder.load_file("Libs//uix//kv//modules//custom_bottom_navigation.kv")
-        self.screens = ['menu','statistic','books','edit','bookInternal']
-
-        sm.add_widget(MenuScreen(name="menu"))
-        sm.add_widget(StatisticScreen(name="statistic"))
-        sm.add_widget(EdittingScreen(name="edit"))
-        sm.add_widget(BooksScreen(name="books"))
-        sm.add_widget(InternalMenuBookScreen(name="bookInternal"))
-        return sm
+        conn.close()
+        return False
 
 
 if __name__ == '__main__':

@@ -32,6 +32,9 @@ class BooksScreen(Screen):
             """INSERT INTO 'Data_name_of_books' VALUES (?,?)"""
             ]
 
+
+
+
     def cancel(self, *arg):
         self.NewDialog.dismiss()
         pprint("cancel")
