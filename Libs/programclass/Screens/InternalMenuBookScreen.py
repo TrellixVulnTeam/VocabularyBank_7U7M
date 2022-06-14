@@ -4,7 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ColorProperty
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.label import MDLabel
@@ -28,8 +28,10 @@ class InternalMenuBookScreen(Screen):
         self.NewDialog = Popup(
             title="Input a new Word",
             size_hint=(None,None),
-            size=(600,430),
-            auto_dismiss=False
+            title_align='center',
+            size=(400,310),
+            auto_dismiss=False,
+            separator_color='#FEF9F5',
         )
         main_box = BoxLayout(
             orientation="vertical",
@@ -37,77 +39,141 @@ class InternalMenuBookScreen(Screen):
         )
         in_main_box_top = BoxLayout(
             orientation="vertical",
-            size_hint=(0.9,0.7)
+            size_hint=(1,0.8)
         )
 
         word_box = BoxLayout(
+            size_hint_x= 0.98,
+            size_hint_y= 0.2,
             orientation = 'horizontal'
             )
         translate_box = BoxLayout(
+            size_hint_x= 0.98,
+            size_hint_y= 0.2,
             orientation = 'horizontal'
             )
         transcription_box = BoxLayout(
+            size_hint_x= 0.98,
+            size_hint_y= 0.2,
             orientation = 'horizontal'
             )
+        asociation_box = BoxLayout(
+            size_hint_x= 0.98,
+            size_hint_y= 0.2,
+            orientation = 'horizontal'
+            )
+
 
 
         in_main_box_bottom = BoxLayout(
             orientation="horizontal",
-            size_hint=(0.95,0.3)
+            size_hint=(0.95,0.2)
         )
 
         self.text_input_word = MDTextField(
-            size_hint=(0.8,0.6),
-            helper_text="Line is empty, please input or close",
+            pos_hint={ 'center_x':0.5,'center_y':0.5 },
+            size_hint=(0.8,0.8),
+            helper_text="Line is necessarily",
             helper_text_mode="on_error",
+            hint_text="Necessarily",
+            current_hint_text_color='#706B67',
+            foreground_color="#FEF9F5",
         )
+
         self.text_input_translate = MDTextField(
-            size_hint=(0.8,0.6),
-            helper_text="Line is empty, please input or close",
+            pos_hint={ 'center_x':0.5,'center_y':0.5 },
+            size_hint=(0.8,0.8),
+            helper_text="Line is necessarily",
             helper_text_mode="on_error",
+            hint_text="Necessarily",
+            current_hint_text_color='#706B67',
+            foreground_color="#FEF9F5",
         )
         
         self.text_input_transcription = MDTextField(
-            size_hint=(0.8,0.6),
-            helper_text="Line is empty, please input or close",
-            helper_text_mode="on_error",
+            pos_hint={ 'center_x':0.5,'center_y':0.5 },
+            size_hint=(0.8,0.8),
+            hint_text="Not necessarily",
+            current_hint_text_color='#706B67',
+            foreground_color="#FEF9F5"
+        )
+
+        self.text_input_asociation = MDTextField(
+            pos_hint={ 'center_x':0.5,'center_y':0.5 },
+            size_hint=(0.8,0.8),
+            hint_text="Not necessarily",
+            current_hint_text_color='#706B67',
+            foreground_color="#FEF9F5",
         )
 
         word_box.add_widget(
             MDLabel(
-                text="Word"
+                theme_text_color="Custom",
+                text_color="#FEF9F5",
+                pos_hint={ 'center_x':0.5,'center_y':0.5 },
+                size_hint=(0.3,0.2),
+                text="Word",
+                font_name= "Comic"
                 )
         )
         translate_box.add_widget(
             MDLabel(
-                text="translate"
+                theme_text_color="Custom",
+                text_color="#FEF9F5",
+                pos_hint={ 'center_x':0.5,'center_y':0.5 },
+                size_hint=(0.3,0.2),
+                text="translate",
+                font_name= "Comic"
             )
         ) 
         transcription_box.add_widget(
             MDLabel(
-                text="transcription"
+                theme_text_color="Custom",
+                text_color="#FEF9F5",
+                pos_hint={ 'center_x':0.5,'center_y':0.5 },
+                size_hint=(0.3,0.2),
+                text="transcription",
+                font_name= "Comic"
             )
         )
+        asociation_box.add_widget(
+            MDLabel(
+                theme_text_color="Custom",
+                text_color="#FEF9F5",
+                pos_hint={ 'center_x':0.5,'center_y':0.5 },
+                size_hint=(0.3,0.2),
+                text="asociation",
+                font_name= "Comic"
+            )
+        )
+
 
         word_box.add_widget( self.text_input_word )
         translate_box.add_widget( self.text_input_transcription )
         transcription_box.add_widget( self.text_input_translate )
+        asociation_box.add_widget( self.text_input_asociation )
+
 
         in_main_box_top.add_widget(word_box)
         in_main_box_top.add_widget(translate_box)
         in_main_box_top.add_widget(transcription_box)
+        in_main_box_top.add_widget(asociation_box)
 
         close_but = MDFlatButton(
-            size_hint=(0.4,0.45),
+            pos_hint={ 'center_x':0.5,'center_y':0.5 },
+            text_color="#FEF9F5",
             text="CLOSE"
         )
         ok_but = MDFlatButton(
-            size_hint=(0.4,0.45),
+            pos_hint={ 'center_x':0.5,'center_y':0.5 },
+            text_color="#FEF9F5",
             text="OK"
         )
 
         close_but.bind(on_release=self.close)
         ok_but.bind(on_release=self.create)
+
+
 
 
         in_main_box_bottom.add_widget( close_but )
@@ -126,9 +192,13 @@ class InternalMenuBookScreen(Screen):
 
 
     def create(self, *instanse):
+        self.NewDialog
+
+
         self.NewDialog.dismiss()
 
 
     def add_word_func(self):
         self.add_book_dialog()
+
 
