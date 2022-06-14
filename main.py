@@ -24,7 +24,6 @@ from kivy.uix.gridlayout import GridLayout
 
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
-from kivy.properties import ColorProperty
 
 #include programclasses
 
@@ -81,7 +80,7 @@ class Main(MDApp):
         return sm  
 
 
-    #START FOR zone with swap and bind internal book screen
+
     def swap_screen(self,screen_name_index,*name_book):
         screen_name = self.screens
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
@@ -102,36 +101,8 @@ class Main(MDApp):
 
 
     def add_word_into_internal(self,word):
-
         but = CustomList()
-        but.Label_menu_texts['word'] = word[0]
-        but.Label_menu_texts['translate'] = word[2]
-        swap_color = ColorProperty("lightslategrey")
-
-
-        if word[1] != None and word[1] !='':
-            but.Label_menu_texts['transcription'] = word[1]
-
-        but.Label_menu_texts['status'] = str(word[4])
-
-        if word[3] != None and word[1] != '':
-            but.Label_menu_texts['asociations'] = word[3]
-
         self.root.get_screen("bookInternal").ids.list_view.children[0].add_widget(but)
-
-    # check data base if exist table also like into Book screen funck
-    def is_tabele_with_name(self,name):
-        conn = sqlite3.connect("Data/Base/Books.db")
-        cursor = conn.cursor()
-        for item in cursor.execute("SELECT db_name FROM Data_name_of_books").fetchall():
-            if name == item:
-                conn.close()
-                return True
-            else:
-                continue
-
-        conn.close()
-        return False
 
 
     def build_screen(self,data):
@@ -139,24 +110,23 @@ class Main(MDApp):
         for word in data:
             self.add_word_into_internal(word)
 
-    # start algortitm for loading words > build_screen > add_word_into_internal > (get screen with words list)
+
     def load_words(self, table_name):
         if self.is_tabele_with_name(table_name):
             conn = sqlite3.connect("Data/Base/Books.db")
             cursor = conn.cursor()
-            print(table_name[0])
-            data = cursor.execute("SELECT * FROM " + '\''+table_name[0]+'\'')
+            data = cursor.execute("SELECT * FROM " + table_name[0])
             data = data.fetchall()
             conn.close()
             self.build_screen(data)
-    #END FOR  zone with swap and bind internal book screen
 
-    #START FOR zone where loading new book
+
+
     def del_book_func(self,bookName,wd_for_del):
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         cursor.execute("DELETE FROM 'Data_name_of_books' WHERE db_name=?",[bookName])
-        cursor.execute("DROP TABLE IF EXISTS '{}'".format(bookName)) 
+        cursor.execute("DROP TABLE IF EXISTS {}".format(bookName)) 
         conn.commit()
         conn.close()
         self.root.get_screen("books").ids.books_add_list.remove_widget(wd_for_del)
@@ -215,7 +185,20 @@ class Main(MDApp):
         but.add_widget(edit_item)
         self.root.get_screen("books").ids.books_add_list.add_widget(but)
 
-    #END FOR zone where loading new book
+
+    def is_tabele_with_name(self,name):
+        conn = sqlite3.connect("Data/Base/Books.db")
+        cursor = conn.cursor()
+        for item in cursor.execute("SELECT db_name FROM Data_name_of_books").fetchall():
+            if name == item:
+                conn.close()
+                return True
+            else:
+                continue
+
+        conn.close()
+        return False
+
 
 if __name__ == '__main__':
     Main().run()
