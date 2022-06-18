@@ -45,6 +45,7 @@ from Libs.programclass.modules.WordsList import WordsList
 class Main(MDApp):
     load_books_triger = False
     screen_is_displayed = "menu"
+    
     sql_executes = ["""
             CREATE TABLE IF NOT EXISTS 'Data_name_of_books' (
                 "db_name"	TEXT NOT NULL UNIQUE,
@@ -57,6 +58,8 @@ class Main(MDApp):
     icon_button_top_menu_size = StringProperty("32sp")
     icon_button_bot_menu_size = StringProperty("34sp")
     icon_main_menu_size = StringProperty("42sp")
+
+
 
 
     def build(self):
@@ -86,7 +89,6 @@ class Main(MDApp):
         screen_name = self.screens
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
         if screen_name_index[0] == '5':
-            pprint(name_book)
             self.clear_internal_screen()
             self.load_words(name_book)
 
@@ -95,7 +97,6 @@ class Main(MDApp):
 
 
     def clear_internal_screen(self):
-        pprint(self.root.get_screen("bookInternal").ids.list_view.children[0])
         ob = self.root.get_screen("bookInternal").ids.list_view
         ob.remove_widget(ob.children[0])
         ob.add_widget(WordsList())
@@ -135,7 +136,6 @@ class Main(MDApp):
 
 
     def build_screen(self,data):
-        pprint(data)
         for word in data:
             self.add_word_into_internal(word)
 
@@ -172,7 +172,6 @@ class Main(MDApp):
                 new_book_name = book[0]
                 new_book_word_number = book[1]
                 self.add_book_func(new_book_name,new_book_word_number)
-            pprint(data)
             self.load_books_triger = True
         else:
             pass

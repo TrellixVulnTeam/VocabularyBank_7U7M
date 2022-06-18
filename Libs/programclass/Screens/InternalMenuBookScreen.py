@@ -1,10 +1,9 @@
-from cgitb import text
-from hashlib import md5
+from pprint import pprint
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
-from kivy.properties import StringProperty, ColorProperty
+from kivy.properties import StringProperty
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.label import MDLabel
@@ -18,11 +17,12 @@ class InternalMenuBookScreen(Screen):
     icon_search_size = StringProperty("30sp")
     font_size_search_field = StringProperty("26sp")
     icon_left_menu_botton_size = StringProperty("36sp")
-
+    
 
 
     def write_in_data_base(self,table_name, information):
         pass
+
 
     def add_book_dialog(self, *instance):
         self.NewDialog = Popup(
@@ -187,13 +187,28 @@ class InternalMenuBookScreen(Screen):
         self.NewDialog.open()
 
 
+    def create_new_word(self,data):
+        conn = sqlite3.connect("Data/Base/Books.db")
+        cursor = conn.cursor()
+        #cursor.execute("INSERT INTO")
+        conn.close()
+
+
     def close(self, *instanse):
         self.NewDialog.dismiss()
 
 
     def create(self, *instanse):
-        self.NewDialog
+        data = []
+        data.append(self.text_input_word.text)
+        data.append(self.text_input_transcription.text)
+        data.append(self.text_input_translate.text)
+        data.append(self.text_input_asociation.text)
 
+        if self.check_is_valid(data):
+            self.create_new_word(data)
+
+        pprint(data)
 
         self.NewDialog.dismiss()
 

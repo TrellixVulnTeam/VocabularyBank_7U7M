@@ -50,17 +50,20 @@ class BooksScreen(Screen):
 
     # start algortitm for loading words > build_screen > add_word_into_internal > (get screen with words list)
     def load_words(self, table_name):
-        if self.is_tabele_with_name(table_name):
+        if self.is_table_with_name(table_name):
+            self.table_internal_book_name = table_name[0]
+            
+            self.parent.get_screen("bookInternal").ids.search_field.hint_text = "Search in {}".format(self.table_internal_book_name)
             conn = sqlite3.connect("Data/Base/Books.db")
             cursor = conn.cursor()
-            print(table_name[0])
             data = cursor.execute("SELECT * FROM " + '\''+table_name[0]+'\'')
+
             data = data.fetchall()
             conn.close()
-            self.build_screen(data)
+            self.build_screen(data,table_name)
 
     # check data base if exist table
-    def is_tabele_with_name(self,name):
+    def is_table_with_name(self,name):
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         for item in cursor.execute("SELECT db_name FROM Data_name_of_books").fetchall():
@@ -69,9 +72,23 @@ class BooksScreen(Screen):
                 return True
             else:
                 continue
+        conn.close()
+        return False
 
 
-    def build_screen(self,data):
+    def save_table_name_into_db(self,table_name):
+        conn = sqlite3.connect("Data/Base/Books.db")
+        cursor = conn.cursor()
+        data = cursor.execute("SELECT * FROM last_book_screen_internal")
+        data = data.fetchall()
+        if len(data) == 0:
+            cursor.execute("INSERT INTO last_book_screen_internal VALUE(?,?)",(None,table_name[0]))
+        conn.commit()
+        conn.close()   
+
+
+
+    def build_screen(self,data,table_name):
         pprint(data)
         for word in data:
             self.add_word_into_internal(word)
