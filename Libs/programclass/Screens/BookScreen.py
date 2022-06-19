@@ -1,9 +1,21 @@
+from asyncio import events
+from asyncio.windows_events import NULL
+from ctypes import sizeof
+from posixpath import dirname
 import sqlite3
 from pprint import pprint
+from tkinter.messagebox import NO
+from turtle import window_height
+import zipfile
 
-from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
-from kivymd.uix.button import MDFlatButton
+from certifi import contents
+
+from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget,OneLineAvatarIconListItem
+from kivymd.uix.button import MDFlatButton,MDRaisedButton
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.dialog import MDDialog
+
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
@@ -11,6 +23,7 @@ from kivy.uix.popup import Popup
 
 from Libs.programclass.modules.CustomList import CustomList
 from Libs.programclass.modules.WordsList import WordsList
+from Libs.programclass.modules.AddBookDialog import AddBookDialog
 
 
 from kivy.properties import StringProperty
@@ -19,6 +32,8 @@ from kivy.properties import StringProperty
 
 class BooksScreen(Screen):
     #root variable
+    delete_dialog = None
+    add_book_dialog_obj = None
     icon_button_pluss_size = StringProperty("42sp")
     icon_filter_size = StringProperty("30sp")
     icon_search_size = StringProperty("30sp")
@@ -108,11 +123,9 @@ class BooksScreen(Screen):
             but.Label_menu_texts['asociations'] = word[3]
 
         self.root.get_screen("bookInternal").ids.list_view.children[0].add_widget(but)
-    #end swap to interanal zone
 
-    def cancel(self, *arg):
-        self.NewDialog.dismiss()
-        pprint("cancel")
+
+    #end swap to interanal zone
 
     def into_book_menu(self):
         pass
@@ -126,7 +139,7 @@ class BooksScreen(Screen):
 
         del_item = IconLeftWidget(
             icon="delete",
-            on_release= lambda x,y = book[0],z = but: self.del_book_func(y,z)
+            on_release= lambda x,z = but: self.del_book_func(z)
             )
 
         edit_item= IconRightWidget(icon="book-edit")
@@ -136,16 +149,80 @@ class BooksScreen(Screen):
         but.add_widget(edit_item)
         self.ids.books_add_list.add_widget(but)
 
+
+
+
+
     #delete book form DATA BASE and from screen
-    def del_book_func(self,bookName,wd_for_del):
+    def del_book_func(self,wd_for_del):
+        self.wont_to_del_menu(wd_for_del)
+
+
+    def del_from_data_base(self,wd_for_del):
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
+        bookName = wd_for_del.children[2].children[2].text
+
         cursor.execute("DELETE FROM 'Data_name_of_books' WHERE db_name=?",[bookName])
         cursor.execute("DROP TABLE IF EXISTS '{}'".format(bookName)) 
         conn.commit()
         conn.close()
         self.ids.books_add_list.remove_widget(wd_for_del)
 
+
+    def wont_to_del_menu(self,ditem):
+        but = [
+            MDFlatButton(
+                text="CANCEL",
+                pos_hint={"left":1},
+                on_release = lambda x: self.del_menu_dismiss()
+            ),
+            MDRaisedButton(
+                text="DELETE",
+                pos_hint={"right":1},
+                on_release = lambda x,  z = ditem: self.del_menu_confirm(z)
+        )]
+        main_lay = BoxLayout(
+            orientation= "vertical",
+            spacing="12dp",
+            size_hint_y= None,
+            height= "35dp",
+            pos_hint={'top':1},
+        )
+        bottom_nav_lay = BoxLayout(
+            size_hint= (0.8,0.8),
+            orientation="horizontal",
+            pos_hint={'bottom':1,'center_x':0.5},
+        )
+        main_lay.add_widget(bottom_nav_lay)
+
+        bottom_nav_lay.add_widget(but[0])
+        bottom_nav_lay.add_widget(but[1])
+
+
+
+        if not self.delete_dialog:
+            self.delete_dialog = MDDialog(
+                title="Delete?",
+                type="custom",
+                content_cls = main_lay,
+                radius=[20, 7, 20, 7],
+            )
+        self.delete_dialog.open()
+
+    
+    def del_menu_dismiss(self):
+        self.delete_dialog.dismiss()
+        self.delete_dialog = None
+
+
+    def del_menu_confirm(self,ditem):
+        self.del_from_data_base(ditem)
+        self.delete_dialog.dismiss()
+        self.delete_dialog = None
+
+
+    #--------------------------------------------------------
 
 
     def create_new_book_by_name(self,name):
@@ -160,64 +237,50 @@ class BooksScreen(Screen):
         self.add_book_func(book)
         conn.close()
 
-    def create(self, *arg):
+    def create(self, text_field,*arg):
         # see is the text in poput -> textfield no empty
-        if self.text_input.text == "":
-            self.text_input.error = True
+        if text_field.text == "":
+            text_field.error = True
         else:
-
             # zone for check to validation
-            name = self.text_input.text #.replace(" ",'')
+            name = text_field.text #.replace(" ",'')
             self.create_new_book_by_name(name)
-            self.NewDialog.dismiss()
+
+        self.add_book_dialog_obj.dismiss()
+        self.add_book_dialog_obj = None
+
 
     #create new dialog for add new book into book screen
     def add_book_dialog(self, *instance):
-        self.NewDialog = Popup(
-            title="Input a new book",
-            size_hint=(None,None),
-            title_align='center',
-            size=(200,150),
-            auto_dismiss=False,
-            separator_color='#FEF9F5'
-        )
-        main_box = BoxLayout(
-            orientation="vertical",
-            size_hint=(0.95,0.95)
-        )
-        in_main_box = BoxLayout(
-            size_hint=(0.9,0.65)
-        )
-        self.text_input = MDTextField(
-            helper_text="Name is empty, please input or close",
-            helper_text_mode="on_error",
-            hint_text="write a book",
-            current_hint_text_color='#706B67',
-            foreground_color="#FEF9F5"
-        )
-
-        close_but = MDFlatButton(
-            pos_hint={ 'center_x':0.5,'center_y':0.5 },
-            text_color="#FEF9F5",
-            text="CLOSE"
-        )
-        ok_but = MDFlatButton(
-            pos_hint={ 'center_x':0.5,'center_y':0.5 },
-            text_color="#FEF9F5",
-            text="OK"
-        )
-        close_but.bind(on_release=self.cancel)
-        ok_but.bind(on_release=self.create)
 
 
-        bot_lay = BoxLayout(orientation='horizontal',pos_hint={'bottom':1},size_hint=(0.9,0.35))
+        if not self.add_book_dialog_obj:
+            input_book_obj = AddBookDialog()
+            but=[
+            MDFlatButton(
+                text="CANCEL",
+                pos_hint={"left":1},
+                on_release = lambda x: self.cancel() 
+                ),
+            MDRaisedButton(
+                text="CREATE",
+                pos_hint={"right":1},
+                on_release = lambda x: self.create(input_book_obj.ids.new_name_of_book)
+                ),
+            ]
+            input_book_obj.ids.bottom_nav.add_widget(but[0])
+            input_book_obj.ids.bottom_nav.add_widget(but[1])
+            self.add_book_dialog_obj = MDDialog(
+                title="Create new",
+                type="custom",
+                content_cls = input_book_obj,
+                radius=[20, 7, 20, 7],
+            )
+        
+        self.add_book_dialog_obj.open()
 
-        bot_lay.add_widget(ok_but)
-        bot_lay.add_widget(close_but)
-        in_main_box.add_widget(self.text_input)
-        main_box.add_widget(in_main_box)
-        main_box.add_widget(bot_lay)
 
-        self.NewDialog.add_widget(main_box)
-
-        self.NewDialog.open()
+    def cancel(self, *arg):
+        self.add_book_dialog_obj.dismiss()
+        self.add_book_dialog_obj = None
+        pprint("cancel")

@@ -8,8 +8,10 @@ from tkinter.messagebox import NO
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
 from kivy.lang.builder import Builder
-from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDFlatButton,MDRaisedButton
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.dialog import MDDialog
+
 
 from kivy.clock import Clock
 Clock.max_iteration = 30
@@ -44,6 +46,7 @@ from Libs.programclass.modules.WordsList import WordsList
 
 class Main(MDApp):
     load_books_triger = False
+    delete_dialog = None
     screen_is_displayed = "menu"
     
     sql_executes = ["""
@@ -74,6 +77,9 @@ class Main(MDApp):
         Builder.load_file("Libs//uix//kv//modules//CustomBottomNavigation.kv")
         Builder.load_file("Libs//uix//kv//modules//CustomList.kv")
         Builder.load_file("Libs//uix//kv//modules//WordsList.kv")
+        Builder.load_file("Libs//uix//kv//modules//AddBookDialog.kv")
+        Builder.load_file("Libs//uix//kv//modules//AddWordDialog.kv")
+
         self.screens = ['menu','statistic','books','edit','bookInternal']
 
         sm.add_widget(MenuScreen(name="menu"))
@@ -152,15 +158,71 @@ class Main(MDApp):
     #END FOR  zone with swap and bind internal book screen
 
     #START FOR zone where loading new book
-    def del_book_func(self,bookName,wd_for_del):
+    def del_from_data_base(self,wd_for_del):
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
+        bookName = wd_for_del.children[2].children[2].text
+
         cursor.execute("DELETE FROM 'Data_name_of_books' WHERE db_name=?",[bookName])
         cursor.execute("DROP TABLE IF EXISTS '{}'".format(bookName)) 
         conn.commit()
         conn.close()
         self.root.get_screen("books").ids.books_add_list.remove_widget(wd_for_del)
 
+
+    def wont_to_del_menu(self,ditem):
+        but = [
+            MDFlatButton(
+                text="CANCEL",
+                pos_hint={"left":1},
+                on_release = lambda x: self.del_menu_dismiss()
+            ),
+            MDRaisedButton(
+                text="DELETE",
+                pos_hint={"right":1},
+                on_release = lambda x,  z = ditem: self.del_menu_confirm(z)
+        )]
+        main_lay = BoxLayout(
+            orientation= "vertical",
+            spacing="12dp",
+            size_hint_y= None,
+            height= "35dp",
+            pos_hint={'top':1},
+        )
+        bottom_nav_lay = BoxLayout(
+            size_hint= (0.8,0.8),
+            orientation="horizontal",
+            pos_hint={'bottom':1,'center_x':0.5},
+        )
+        main_lay.add_widget(bottom_nav_lay)
+
+        bottom_nav_lay.add_widget(but[0])
+        bottom_nav_lay.add_widget(but[1])
+
+
+
+        if not self.delete_dialog:
+            self.delete_dialog = MDDialog(
+                title="Delete?",
+                type="custom",
+                content_cls = main_lay,
+                radius=[20, 7, 20, 7],
+            )
+        self.delete_dialog.open()
+
+    
+    def del_menu_dismiss(self):
+        self.delete_dialog.dismiss()
+        self.delete_dialog = None
+
+
+    def del_menu_confirm(self,ditem):
+        self.del_from_data_base(ditem)
+        self.delete_dialog.dismiss()
+        self.delete_dialog = None
+
+    #-----------------------------------------------
+    
 
     def load_books(self):
         if self.load_books_triger == False:
@@ -204,11 +266,11 @@ class Main(MDApp):
         )
         del_item = IconLeftWidget(
             icon="delete",
-            on_release= lambda x,y = new_book_name,z = but: self.del_book_func(y,z)
+            on_release= lambda y,z = but: self.wont_to_del_menu(z)
         )
         edit_item= IconRightWidget(
             icon="book-edit",
-            on_release= lambda x: self.edit_menu
+            on_release= lambda x: self.edit_menu()
         )
         but.add_widget(del_item)
         but.add_widget(edit_item)
