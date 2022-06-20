@@ -1,0 +1,22 @@
+//yelow no whitly
+canvas:
+    Color:
+        rgba: hex("#E8D58C")
+    Rectangle:
+        pos: self.pos
+        size: self.size
+//yelow whitly
+canvas:
+    Color:
+        rgba: hex('#FFFFE4')
+    Rectangle:
+        pos: self.pos
+        size: self.size
+// black
+canvas:
+    Color:
+        rgba: hex('#212121')
+    Rectangle:
+        pos: self.pos
+        size: self.size
+

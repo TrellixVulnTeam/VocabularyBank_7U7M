@@ -1,7 +1,16 @@
+
 <CustomBottomNavigation>
+    canvas:
+        Color:
+            rgba: hex("#E8D58C")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     id: bottom_navigation
     size_hint_y: 0.08
     size_hint_x: 1
+    pos_hint:{'bottom':1}
         #panel_color: get_color_from_hex("#eeeaea")
         #selected_color_background: get_color_from_hex("#97ecf8")
         #text_color_activate: 0, 0, 0, 1
@@ -16,14 +25,6 @@
                 app.swap_screen('1')
 
     BoxLayout:
-        canvas:
-            Color:
-                rgba: 151, 236, 248, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
-
-
 
         BoxLayout:
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}

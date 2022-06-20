@@ -1,17 +1,14 @@
 from distutils.command.build import build
-from logging import root
-from re import X
 import sqlite3
 
 from pprint import pprint
-from tkinter.messagebox import NO
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
 from kivy.lang.builder import Builder
 from kivymd.uix.button import MDFlatButton,MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dialog import MDDialog
-
+from kivymd.uix.label import MDLabel
 
 from kivy.clock import Clock
 Clock.max_iteration = 30
@@ -23,6 +20,7 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.gridlayout import GridLayout
+from kivy.core.window import Window
 
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
@@ -42,13 +40,15 @@ from Libs.programclass.modules.WordsList import WordsList
 #from Libs.uix.kv import ScreenManagerKV,MenuScreen, EdittingScreen,BooksScreen,StatisticScreen
 
 
+Window.size = 500,800
+Window.top = 30
+Window.left = 500
 
 
 class Main(MDApp):
     load_books_triger = False
     delete_dialog = None
     screen_is_displayed = "menu"
-    
     sql_executes = ["""
             CREATE TABLE IF NOT EXISTS 'Data_name_of_books' (
                 "db_name"	TEXT NOT NULL UNIQUE,
@@ -87,7 +87,21 @@ class Main(MDApp):
         sm.add_widget(EdittingScreen(name="edit"))
         sm.add_widget(BooksScreen(name="books"))
         sm.add_widget(InternalMenuBookScreen(name="bookInternal"))
+
         return sm  
+
+
+    def get_size_into_internal(self,book,size_load):
+        if size_load == None:
+            get_execute = "SELECT size FROM 'Data_name_of_books' WHERE db_name = '"+book+"'"
+
+            conn = sqlite3.connect("Data/Base/Books.db")
+            cursor = conn.cursor()
+            data_db = cursor.execute(get_execute)
+            size = data_db.fetchall()[0][0]
+            conn.close()
+            return size // 7 + 1
+
 
 
     #START FOR zone with swap and bind internal book screen
@@ -96,7 +110,10 @@ class Main(MDApp):
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
         if screen_name_index[0] == '5':
             self.clear_internal_screen()
-            self.load_words(name_book)
+            self.root.get_screen("bookInternal").ids.search_field.hint_text = f"Search in {name_book[0]}"
+            
+            self.root.get_screen("bookInternal").ids.list_view.children[0].size_hint_y = self.get_size_into_internal(name_book[0],None)
+            self.load_words(name_book) 
 
         pprint("[Log   ]"f"@{self.screen_is_displayed}"+" >> "+f"@{screen_name[int(screen_name_index[0])-1]}")
         self.screen_is_displayed = screen_name[int(screen_name_index[0])-1]

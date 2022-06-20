@@ -2,8 +2,13 @@
 
 <MySwiper@MDSwiperItem>
     BoxLayout:
-        Button:
-            text: "hi"
+        canvas:
+            Color:
+                rgba: hex('#FFFFE4')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
 
 <MainAPP>
     ScreenManager:

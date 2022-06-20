@@ -1,77 +1,101 @@
+#:import hex kivy.utils.get_color_from_hex
 
 <InternalMenuBookScreen>:
     name: 'bookInternal'
     BoxLayout:
-        size_hint_y: 1
-        size_hint_x: 0.06
-        id: left_pool
-        orientation: "vertical"
-        pos_hint: {'left':1,'top':1}
+        size_hint:1,1
+        canvas:
+            Color:
+                rgba: hex('#212121')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        orientation: "horizontal"
         BoxLayout:
-            size_hint_x: 1
-            size_hint_y: 0.2
-            pos_hint: {'top':1}
-            MDIconButton:
-                icon: "backburger"
-                user_font_size: root.icon_left_menu_botton_size
-                pos_hint: {'center_x': 0.5, 'top':1}
-                on_release: app.swap_screen('3')
+            canvas:
+                Color:
+                    rgba: hex("#E8D58C")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
-        BoxLayout:
-            size_hint_x: 1
-            size_hint_y: 0.6
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_y: 1
+            size_hint_x: 0.12
+            id: left_pool
+            orientation: "vertical"
+            pos_hint: {'left':1,'top':1}
+            BoxLayout:
+                size_hint_x: 1
+                size_hint_y: 0.2
+                pos_hint: {'top':1}
+                MDIconButton:
+                    icon: "backburger"
+                    user_font_size: root.icon_left_menu_botton_size
+                    pos_hint: {'center_x': 0.5, 'top':1}
+                    on_release: app.swap_screen('3')
 
-
-        BoxLayout:
-            pos_hint: {'bottom':1}
-            size_hint_x: 1
-            size_hint_y: 0.2
-            MDIconButton:
-                icon: "plus"
-                user_font_size: root.icon_left_menu_botton_size
-                pos_hint: {'center_x': 0.5, 'bottom':1}
-                on_release: root.add_word_dialog()
-
-
-
-
-    BoxLayout:
-        id: word_list
-        orientation: "vertical"
-        size_hint_y: 0.84
-        size_hint_x: 0.92
-        pos_hint: {'right':1,'top':1}
-        BoxLayout:
-            id: top_partical
-            pos_hint: {"top": 1}
-            orientation: 'horizontal'
-            size_hint_x: 1
-            size_hint_y: 0.1
-            MDIconButton:
-                pos_hint: {"right": 1}
-                user_font_size: root.icon_filter_size
-                id: filters_menu
-                icon: "filter-menu"
-
-
-            MDTextField:
-                id: search_field
+            BoxLayout:
+                size_hint_x: 1
+                size_hint_y: 0.6
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                font_size: root.font_size_search_field
-                multiline: False
-                hint_text: 'Search in'
-                #on_text: root.set_list_md_icons(self.text, True)
-            MDIconButton:
-                id: search
-                icon: 'magnify'
-                user_font_size: root.icon_search_size
-                pos_hint: {"left": 1}
 
-        ScrollView:
-            id: list_view
-            size_hint_x: 0.9
-            size_hint_y: 0.82
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            WordsList:
+            BoxLayout:
+                pos_hint: {'bottom':1}
+                size_hint_x: 1
+                size_hint_y: 0.2
+                MDIconButton:
+                    icon: "plus"
+                    user_font_size: root.icon_left_menu_botton_size
+                    pos_hint: {'center_x': 0.5, 'bottom':1}
+                    on_release: 
+                        root.add_word_dialog()
+
+        BoxLayout:
+            canvas:
+                Color:
+                    rgba: hex('#FFFFE4')
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            id: word_list
+            orientation: "vertical"
+            size_hint_y: 0.84
+            size_hint_x: 0.88
+            pos_hint: {'right':1,'top':1}
+
+            BoxLayout:
+                id: top_partical
+                pos_hint: {"top": 1}
+                orientation: 'horizontal'
+                size_hint_x: 1
+                size_hint_y: 0.1
+                MDIconButton:
+                    pos_hint: {"right": 1}
+                    user_font_size: root.icon_filter_size
+                    id: filters_menu
+                    icon: "filter-menu"
+
+
+                MDTextField:
+                    id: search_field
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    font_size: root.font_size_search_field
+                    multiline: False
+                    hint_text: 'Search in'
+                    #on_text: root.set_list_md_icons(self.text, True)
+                MDIconButton:
+                    id: search
+                    icon: 'magnify'
+                    user_font_size: root.icon_search_size
+                    pos_hint: {"left": 1}
+
+            
+            ScrollView:
+                id: list_view
+                size_hint_x: 0.9
+                do_scroll_x: False
+                do_scroll_y: True
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                WordsList:

@@ -15,6 +15,7 @@ from kivymd.uix.button import MDFlatButton,MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 
 
 from kivy.uix.boxlayout import BoxLayout
@@ -34,18 +35,19 @@ class BooksScreen(Screen):
     #root variable
     delete_dialog = None
     add_book_dialog_obj = None
+    created_table = []
     icon_button_pluss_size = StringProperty("42sp")
     icon_filter_size = StringProperty("30sp")
     icon_search_size = StringProperty("30sp")
     font_size_search_field = StringProperty("26sp")
     table_creator = [
             """CREATE TABLE IF NOT EXISTS '' (
-                "word"	TEXT NOT NULL UNIQUE,
+                "word"	TEXT NOT NULL,
                 "transcription"	TEXT,
-                "translate" TEXT NOT NULL UNIQUE,
+                "translate" TEXT NOT NULL,
                 "association" TEXT,
                 "status" INTEGER NOT NULL,
-                "index"	INTEGER NOT NULL UNIQUE,
+                "index"	INTEGER NOT NULL,
                 PRIMARY KEY("index" AUTOINCREMENT)
             );""",
             """INSERT INTO 'Data_name_of_books' VALUES (?,?)"""
@@ -53,9 +55,11 @@ class BooksScreen(Screen):
 
     #start swap to interanal zone
     def swap_screen(self,name):
+        self.book_name = name
         setattr(self.parent,"current" ,'bookInternal')
         self.clear_internal_screen()
         self.load_words(name)
+
 
 
     def clear_internal_screen(self):
@@ -65,13 +69,14 @@ class BooksScreen(Screen):
 
     # start algortitm for loading words > build_screen > add_word_into_internal > (get screen with words list)
     def load_words(self, table_name):
-        if self.is_table_with_name(table_name):
-            self.table_internal_book_name = table_name[0]
+        if self.is_table_with_name(table_name) or table_name in self.created_table:
+            self.table_internal_book_name = table_name
+
+            self.parent.get_screen("bookInternal").ids.search_field.hint_text = "Search in {}".format(table_name)
             
-            self.parent.get_screen("bookInternal").ids.search_field.hint_text = "Search in {}".format(self.table_internal_book_name)
             conn = sqlite3.connect("Data/Base/Books.db")
             cursor = conn.cursor()
-            data = cursor.execute("SELECT * FROM " + '\''+table_name[0]+'\'')
+            data = cursor.execute("SELECT * FROM " + '\''+table_name+'\'')
 
             data = data.fetchall()
             conn.close()
@@ -104,7 +109,6 @@ class BooksScreen(Screen):
 
 
     def build_screen(self,data,table_name):
-        pprint(data)
         for word in data:
             self.add_word_into_internal(word)
 
@@ -122,7 +126,8 @@ class BooksScreen(Screen):
         if word[3] != None and word[1] != '':
             but.Label_menu_texts['asociations'] = word[3]
 
-        self.root.get_screen("bookInternal").ids.list_view.children[0].add_widget(but)
+        
+        self.parent.get_screen("bookInternal").ids.list_view.children[0].add_widget(but)
 
 
     #end swap to interanal zone
@@ -226,16 +231,20 @@ class BooksScreen(Screen):
 
 
     def create_new_book_by_name(self,name):
+
         create_execute = self.table_creator[0][:28] + name + self.table_creator[0][28:]
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         book = [name,0]
-
         cursor.execute(create_execute)
         cursor.execute(self.table_creator[1],(book[0],book[1]))
         conn.commit()
+        self.created_table.append(book[0])
         self.add_book_func(book)
         conn.close()
+
+
+
 
     def create(self, text_field,*arg):
         # see is the text in poput -> textfield no empty
