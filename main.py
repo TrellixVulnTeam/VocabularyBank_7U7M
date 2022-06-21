@@ -79,14 +79,24 @@ class Main(MDApp):
         Builder.load_file("Libs//uix//kv//modules//WordsList.kv")
         Builder.load_file("Libs//uix//kv//modules//AddBookDialog.kv")
         Builder.load_file("Libs//uix//kv//modules//AddWordDialog.kv")
+        Builder.load_file("Libs//uix//kv//modules//SimpleStadyRegime.kv")
+        Builder.load_file("Libs//uix//kv//modules//RundomStadyRegime.kv")
+        Builder.load_file("Libs//uix//kv//modules//CustomBooksListElement.kv")
+        Builder.load_file("Libs//uix//kv//modules//CustomBooksList.kv")
+
 
         self.screens = ['menu','statistic','books','edit','bookInternal']
+        self.screens_obj = [
+            MenuScreen(name="menu"),
+            StatisticScreen(name="statistic"),
+            EdittingScreen(name="edit"),
+            BooksScreen(name="books"),
+            InternalMenuBookScreen(name="bookInternal"),
+        ] 
+       # self.screens_obj[0].load_execute_books() # book screen pre load
 
-        sm.add_widget(MenuScreen(name="menu"))
-        sm.add_widget(StatisticScreen(name="statistic"))
-        sm.add_widget(EdittingScreen(name="edit"))
-        sm.add_widget(BooksScreen(name="books"))
-        sm.add_widget(InternalMenuBookScreen(name="bookInternal"))
+        for element_screen in self.screens_obj:
+            sm.add_widget(element_screen)
 
         return sm  
 

@@ -1,5 +1,7 @@
 #:import hex kivy.utils.get_color_from_hex
 
+
+
 <MenuScreen>:
     name: 'menu'
     BoxLayout:
@@ -24,12 +26,12 @@
             orientation: 'horizontal'
             size_hint_y: 0.08
             size_hint_x: 1
-            
+
             BoxLayout:
                 pos_hint: {"bottom": 1}
                 size_hint_y: 0.9
                 size_hint_x: 0.96
-    
+
                 MDIconButton:
                     id: Settings
                     icon: "cog-outline"
@@ -42,7 +44,7 @@
                     size_hint: 0.6, 1
                     text: "This is a plays for rand word"
                     font_style: "H5"
-                        
+
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
 
@@ -53,16 +55,38 @@
                     user_font_size: "32sp"
                     pos_hint: {"right":1, 'center_x': 0.9,'center_y': 0.5}
 
-        
-        MDSwiper:
+
+        BoxLayout:
+            canvas:
+                Color:
+                    rgba: hex('#FFFFE4')
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            id: train_menu
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint_y: 0.82
-            height: root.height - toolbar.height - dp(40)
-            y: root.height - self.height - toolbar.height - dp(20)
+            size_hint_x: 0.9
+            BoxLayout:
+                pos_hint: {'top':1}
+                orientation: "vertical"
+                size_hint_x: 0.92
+                size_hint_y: 0.86
+                BoxLayout:
+                    id: simple_ragime
+                    orientation: "horizontal"
 
-            MySwiper:
+                    MDFlatBatton:
+                        text:
+
+                BoxLayout: 
+                    id: rundom_regime
+                    orientation: "horizontal"
 
 
-            MySwiper:
+
+
 
         CustomBottomNavigation:

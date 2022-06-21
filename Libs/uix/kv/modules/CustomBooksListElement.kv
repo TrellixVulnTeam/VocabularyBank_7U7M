@@ -1,0 +1,21 @@
+
+<CustomBooksListElement>
+    size_hint_y: None
+    size_y: "10dp"
+	size_hint_x: 0.9
+    orientation: 'horizontal'
+
+    padding: root.WordsInterval[0], root.WordsInterval[1]
+	pos_hint: { 'top': 1,'center_x':0.5 }
+    BoxLayout:
+        orientation: "horizontal"
+        MDLabel:
+            size_hint_x: 0.84
+            text: 'book'
+    
+        MDLabel:
+            size_hint_x: 0.1
+            text: '0'    
+
+        MDIconButton:
+            icon: "arrow-right-bold-hexagon-outline"
