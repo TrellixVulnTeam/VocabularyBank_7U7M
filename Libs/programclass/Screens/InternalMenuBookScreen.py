@@ -1,5 +1,4 @@
 from pprint import pprint
-from this import d
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
@@ -33,6 +32,7 @@ class InternalMenuBookScreen(Screen):
 
 
     def get_text_fields(self,obj):
+        '''Convert list of TextField -> list of string'''
         return [item.children[0] for item in obj.ids.information_box.children]
 
 
@@ -67,16 +67,22 @@ class InternalMenuBookScreen(Screen):
 
 
     def update_on_scroll_size(self, size):
+        '''func resize scroll view obj when add new Obj'''
         self.ids.list_view.children[0].size_hint_y = self.ids.list_view.children[0].size_hint_y + 0.2
 
 
     def update_on_book_screen(self, size):
+        '''func resize size of book into book screen'''
         for book in self.parent.get_screen("books").ids.books_add_list.children:
             if book.text == self.self_name_in_db:
                 setattr(book,'hint_text',str(size)+" word in it ")
 
 
     def update_on_internal_screen(self,data):
+        '''add new CastomList() with atributes in trasfered list
+            
+            get list [ word, translate, transcription, asociation]
+        '''
         but = CustomList()
         but.Label_menu_texts['word'] = data[0]
         but.Label_menu_texts['translate'] = data[1]
@@ -92,12 +98,14 @@ class InternalMenuBookScreen(Screen):
 
 
     def update_information_on_screens(self,data,size):
+        ''' func sturn all other func hous update somthing'''
         self.update_on_book_screen(size)
         self.update_on_internal_screen(data) 
         self.update_on_scroll_size(data)
 
 
     def update_db_infor(self,data):
+        '''ubdatate infor about book in DB and on Mainloop'''
         get_execute = "SELECT size FROM 'Data_name_of_books' WHERE db_name = '"+self.self_name_in_db+"'"
         set_execute = "UPDATE 'Data_name_of_books' SET size = ? WHERE db_name = '"+self.self_name_in_db+"'"
 
@@ -113,6 +121,7 @@ class InternalMenuBookScreen(Screen):
 
 
     def write_data_in_db(self,data):
+        '''ubdatate infor about book in DB by name'''
         text = self.ids.search_field.hint_text.split()[-1]
         self.self_name_in_db = text
 
@@ -126,6 +135,7 @@ class InternalMenuBookScreen(Screen):
 
 
     def validation(self,data):
+        '''func see is new word no empty'''
         data = data[::-1]
         if data[0] == "" or data[1] == "":
             print("Has no valid")
@@ -136,6 +146,7 @@ class InternalMenuBookScreen(Screen):
 
 
     def create_new_word(self,data):
+        '''create new word event'''
         text = self.ids.search_field.hint_text.split()[-1]
         self.self_name_in_db = text
 

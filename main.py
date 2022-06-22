@@ -2,6 +2,7 @@ from distutils.command.build import build
 import sqlite3
 
 from pprint import pprint
+from Libs.programclass.Screens.LearnScreen import LearnScreen
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
 from kivy.lang.builder import Builder
@@ -72,6 +73,7 @@ class Main(MDApp):
         Builder.load_file("Libs//uix//kv//BooksScreen.kv")
         Builder.load_file("Libs//uix//kv//EdittingScreen.kv")
         Builder.load_file("Libs//uix//kv//InternalMenuBookScreen.kv")
+        Builder.load_file("Libs//uix//kv//LearnScreen.kv")
         sm = ScreenManager()
 
         Builder.load_file("Libs//uix//kv//modules//CustomBottomNavigation.kv")
@@ -85,15 +87,17 @@ class Main(MDApp):
         Builder.load_file("Libs//uix//kv//modules//CustomBooksList.kv")
 
 
-        self.screens = ['menu','statistic','books','edit','bookInternal']
+        self.screens = ['menu','statistic','books','edit','bookInternal','learn']
         self.screens_obj = [
             MenuScreen(name="menu"),
             StatisticScreen(name="statistic"),
             EdittingScreen(name="edit"),
             BooksScreen(name="books"),
             InternalMenuBookScreen(name="bookInternal"),
+            LearnScreen(name="learn"),
         ] 
        # self.screens_obj[0].load_execute_books() # book screen pre load
+        
 
         for element_screen in self.screens_obj:
             sm.add_widget(element_screen)
@@ -101,7 +105,16 @@ class Main(MDApp):
         return sm  
 
 
+
+    #zone to load learn screen (random or simple or.... )
+    def load_learning(self,regime,*arg):
+        print(regime)
+        self.swap_screen(('6'))
+
+
+    #end zone
     def get_size_into_internal(self,book,size_load):
+        '''funk return new size scroll view obj when swipe into internal screen'''
         if size_load == None:
             get_execute = "SELECT size FROM 'Data_name_of_books' WHERE db_name = '"+book+"'"
 
@@ -116,6 +129,9 @@ class Main(MDApp):
 
     #START FOR zone with swap and bind internal book screen
     def swap_screen(self,screen_name_index,*name_book):
+        '''func get ( index of screen in self.screens like ('3') ) numeration of screen going with 1
+
+            if index of screen = ('5') need get book name'''
         screen_name = self.screens
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
         if screen_name_index[0] == '5':
@@ -130,13 +146,20 @@ class Main(MDApp):
 
 
     def clear_internal_screen(self):
+        '''clear word from screen when go out of internal screen'''
         ob = self.root.get_screen("bookInternal").ids.list_view
         ob.remove_widget(ob.children[0])
         ob.add_widget(WordsList())
 
 
     def add_word_into_internal(self,word):
+        '''write word in list inside the bookInternal for view 
+        
+          get element of table with : [ word, transcription, translate, asociations, status ]
 
+          create CastomList() and with parametrs in transferred list
+          add him into ("bookInternal").ids.list_view.children[0]
+        '''
         but = CustomList()
         but.Label_menu_texts['word'] = word[0]
         but.Label_menu_texts['translate'] = word[2]
@@ -155,6 +178,10 @@ class Main(MDApp):
 
     # check data base if exist table also like into Book screen funck
     def is_tabele_with_name(self,name):
+        '''func check is table by name of not
+
+            (return: bool) (get str: name)
+        '''
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         for item in cursor.execute("SELECT db_name FROM Data_name_of_books").fetchall():
@@ -169,11 +196,22 @@ class Main(MDApp):
 
 
     def build_screen(self,data):
+        '''func start cycle passes on each element of the table which has been transferred
+
+            going to ---> add_word_into_internal(*element of table)
+        '''
         for word in data:
             self.add_word_into_internal(word)
 
     # start algortitm for loading words > build_screen > add_word_into_internal > (get screen with words list)
     def load_words(self, table_name):
+        ''' funk preload word from DataBase by str: table_name
+
+            going to ---> is_tabele_with_name(*table name) if return true 
+                going to ---> build_screen(*data of table)
+            
+            data is table of infor from Data/Base/Books.db - with name of table = table_name
+        '''
         if self.is_tabele_with_name(table_name):
             conn = sqlite3.connect("Data/Base/Books.db")
             cursor = conn.cursor()
@@ -184,8 +222,9 @@ class Main(MDApp):
             self.build_screen(data)
     #END FOR  zone with swap and bind internal book screen
 
-    #START FOR zone where loading new book
+    #START FOR zone where delete  book
     def del_from_data_base(self,wd_for_del):
+        '''delete information(table) from database by name'''
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         bookName = wd_for_del.children[2].children[2].text
@@ -198,6 +237,10 @@ class Main(MDApp):
 
 
     def wont_to_del_menu(self,ditem):
+        ''' fuck create dialog with 2 buttons ok or close 
+        
+            get widget that you want to delete
+        '''
         but = [
             MDFlatButton(
                 text="CANCEL",
@@ -239,19 +282,22 @@ class Main(MDApp):
 
     
     def del_menu_dismiss(self):
+        '''funck if dont wont to delete book'''
         self.delete_dialog.dismiss()
         self.delete_dialog = None
 
 
     def del_menu_confirm(self,ditem):
+        '''funck if wont to delete book'''
         self.del_from_data_base(ditem)
         self.delete_dialog.dismiss()
         self.delete_dialog = None
 
     #-----------------------------------------------
     
-
-    def load_books(self):
+    #START FOR zone where loading new book
+    def load_books(self): 
+        ''' funk load book from data base and write created widget of book in list'''
         if self.load_books_triger == False:
             new_book_word_number = 0
             new_book_name = ''
@@ -267,6 +313,7 @@ class Main(MDApp):
 
 
     def get_infor_from_db(self):
+        ''' return table from db with list [(book_name1,size),(book_name2,size),....]'''
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         data = cursor.execute(self.sql_executes[1]).fetchall()
@@ -275,6 +322,7 @@ class Main(MDApp):
 
 
     def create_data_base(self):
+        '''create table with simple parametrs of book if no exist'''
         conn = sqlite3.connect("Data/Base/Books.db")
         cursor = conn.cursor()
         cursor.execute(self.sql_executes[0])
@@ -285,7 +333,8 @@ class Main(MDApp):
         pass
 
 
-    def add_book_func(self, new_book_name,new_book_word_number):   
+    def add_book_func(self, new_book_name,new_book_word_number):
+        '''func write all book that has in DataBase on book screen'''
         but = ThreeLineAvatarIconListItem(
             text="{}".format( new_book_name ),
             secondary_text="{} words in it".format( new_book_word_number ),

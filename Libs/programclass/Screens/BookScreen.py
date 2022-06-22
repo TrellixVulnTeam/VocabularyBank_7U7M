@@ -1,15 +1,5 @@
-from asyncio import events
-from asyncio.windows_events import NULL
-from ctypes import sizeof
-from posixpath import dirname
 import sqlite3
 from pprint import pprint
-from tkinter.messagebox import NO
-from turtle import window_height
-import zipfile
-
-from certifi import contents
-
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget,OneLineAvatarIconListItem
 from kivymd.uix.button import MDFlatButton,MDRaisedButton
 from kivymd.uix.textfield import MDTextField

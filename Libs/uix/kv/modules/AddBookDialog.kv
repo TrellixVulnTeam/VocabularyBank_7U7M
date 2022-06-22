@@ -1,17 +1,32 @@
+#:import C kivy.utils.get_color_from_hex
+
 <AddBookDialog>
     orientation: "vertical"
-    spacing: "12dp"
+    spacing: 20
     size_hint_y: None
-    height: "100dp"
+    height: "90dp"
     pos_hint:{'top':1}
-    MDTextField:
-        id: new_name_of_book
-        hint_text: "Name"
-        helper_text: "There will always be a mistake"
-        helper_text_mode: "on_error"
+
+    BoxLayout:
+        size_hint: 1,0.8
+        MDTextField:
+            pos_hint:{'top':1}
+            id: new_name_of_book
+            helper_text: "There will always be a mistake"
+            helper_text_mode: "on_error"
+            background_color: C('#F6F6F6')
+            canvas.after:
+                Color:
+                    rgba: C('#3A4353')
+                Line:
+                    points: self.pos[0] , self.pos[1], self.pos[0] + self.size[0], self.pos[1]
+                Color:
+                    rgba: C('#3A4353')
+                Line:
+                    points: self.pos[0], self.pos[1] + self.size[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1]
 
     BoxLayout:
         id: bottom_nav
-        size_hint: 0.3,0.8
+        size_hint: 1,0.2
         orientation: "horizontal"
         pos_hint: {'bottom':1,'center_x':0.5}

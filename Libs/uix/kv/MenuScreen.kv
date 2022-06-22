@@ -10,7 +10,7 @@
         orientation: "vertical"
         canvas:
             Color:
-                rgba: hex('#212121')
+                rgba: hex('#3A434B')
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -57,34 +57,116 @@
 
 
         BoxLayout:
-            canvas:
-                Color:
-                    rgba: hex('#FFFFE4')
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
+            pos_hint: {'top':1}
+
+            size_hint_y: 0.84
+            size_hint_x: 0.9
 
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             id: train_menu
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            size_hint_y: 0.82
-            size_hint_x: 0.9
-            BoxLayout:
-                pos_hint: {'top':1}
-                orientation: "vertical"
-                size_hint_x: 0.92
-                size_hint_y: 0.86
+
+            ScrollView:
                 BoxLayout:
-                    id: simple_ragime
-                    orientation: "horizontal"
+                    spacing: 20
 
-                    MDFlatBatton:
-                        text:
+                    orientation: "vertical"
 
-                BoxLayout: 
-                    id: rundom_regime
-                    orientation: "horizontal"
+                    pos_hint: {'top':1}
+                    size_hint_x: 1
+                    size_hint_y: 0.5
+                    BoxLayout:
+                        spacing: 20
+                        padding: 30,10,30,10
+                        canvas:
+                            Color:
+                                rgba: hex('#FFFFE4')
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        pos_hint: {'top':1,'center_x': 0.5}
+                        size_hint_x: 0.9
+                        size_hint_y: None
+                        id: simple_ragime
+                        orientation: "horizontal"
 
+                        MDFlatButton:
+                            background_color: 0,0,0,0
+                            canvas.before:
+                                Color:
+                                    rgba: hex('#4E575F')
+
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [5,5]
+                            font_size: "18sp"
+                            md_bg_color: "#3A4353"
+                            text_color: "#212121"
+                            pos_hint: {'left':1, 'center_y': 0.5}
+                            text: "Standart"
+                            on_release:
+                                app.load_learning('Standart')
+
+                        MDLabel:
+                            halign: 'center'
+                            valign: 'center'
+                            canvas.before:
+                                Color:
+                                    rgba: hex('#FFFFE4')
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+                            pos_hint: {'right':1, 'center_y': 0.5}
+                            text: "You get one word from one selected dict "
+
+
+                    BoxLayout:
+                        spacing: 20
+                        padding: 30,10,30,10
+                        canvas.before:
+                            Color:
+                                rgba: hex('#FFFFE4')
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+
+
+                        pos_hint: {'top':1,'center_x': 0.5}
+                        size_hint_x: 0.9
+                        size_hint_y: None
+                        id: rundom_regime
+                        orientation: "horizontal"
+
+                        MDFlatButton:
+                            background_color: 0,0,0,0
+                            canvas.before:
+                                Color:
+                                    rgba: hex('#4E575F')
+
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    radius: [5,5]
+
+                            font_size: "18sp"
+                            text_color: "#212121"
+                            pos_hint: {'left':1, 'center_y': 0.5}
+                            text: "Rundom"
+                            on_release:
+                                app.load_learning('Rundom')
+
+                        MDLabel:
+                            halign: 'center'
+                            valign: 'center'
+                            canvas.before:
+                                Color:
+                                    rgba: hex('#FFFFE4')
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+
+                            pos_hint: {'right':1, 'center_y': 0.5}
+                            text: "You get randomly word from all your dict "
 
 
 
