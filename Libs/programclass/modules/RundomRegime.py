@@ -1,5 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
 
 
-class CustomBooksList(BoxLayout):
+class RundomRegime(BoxLayout):
     pass

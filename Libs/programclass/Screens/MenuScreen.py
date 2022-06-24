@@ -1,7 +1,6 @@
 from pprint import pprint
 from kivy.uix.screenmanager import Screen
 
-from Libs.programclass.modules.regimes.CustomBooksListElement import CustomBooksListElement
 
 import sqlite3
 
@@ -22,11 +21,7 @@ class MenuScreen(Screen):
     
     def add_list_elements(self,data):
         # im know that its f***ing sh***  x_x
-        self.container_of_book = self.children[0].children[1].children[0].children[1].children[0].children[0].children[0].children
-        for item in data:
-            element = CustomBooksListElement()
-            element.write_infor(item)
-            self.container_of_book[1].children[1].children[0].children[0].add_widget(element)
+        pass
 
 
 

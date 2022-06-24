@@ -14,16 +14,16 @@
         BoxLayout:
             canvas:
                 Color:
-                    rgba: hex("#E8D58C")
+                    rgba: hex("#F6F6C4")
                 Rectangle:
                     pos: self.pos
                     size: self.size
 
-            size_hint_y: 1
-            size_hint_x: 0.12
+            size_hint_y: 0.98
+            size_hint_x: 0.11
             id: left_pool
             orientation: "vertical"
-            pos_hint: {'left':1,'top':1}
+            pos_hint: {'left':1,'center_y':0.5}
             BoxLayout:
                 size_hint_x: 1
                 size_hint_y: 0.2
@@ -60,9 +60,9 @@
                     size: self.size
             id: word_list
             orientation: "vertical"
-            size_hint_y: 0.84
+            size_hint_y: 0.98
             size_hint_x: 0.88
-            pos_hint: {'right':1,'top':1}
+            pos_hint: {'right':1,'center_y':0.5}
 
             BoxLayout:
                 id: top_partical

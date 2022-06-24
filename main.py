@@ -81,8 +81,8 @@ class Main(MDApp):
         Builder.load_file("Libs//uix//kv//modules//WordsList.kv")
         Builder.load_file("Libs//uix//kv//modules//AddBookDialog.kv")
         Builder.load_file("Libs//uix//kv//modules//AddWordDialog.kv")
-        Builder.load_file("Libs//uix//kv//modules//SimpleStadyRegime.kv")
-        Builder.load_file("Libs//uix//kv//modules//RundomStadyRegime.kv")
+        Builder.load_file("Libs//uix//kv//modules//SimpleRegime.kv")
+        Builder.load_file("Libs//uix//kv//modules//RundomRegime.kv")
         Builder.load_file("Libs//uix//kv//modules//CustomBooksListElement.kv")
         Builder.load_file("Libs//uix//kv//modules//CustomBooksList.kv")
 

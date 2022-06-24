@@ -1,0 +1,68 @@
+
+<LearnScreen>:
+    name: 'LearnScreen'
+    BoxLayout:
+        size_hint: 1,1
+        orientation: "vertical"
+        canvas:
+            Color:
+                rgba: hex('#3A434B')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        FloatLayout:
+            id: top_menu
+            size_hint_x: 1
+            size_hint_y: 0.12
+            pos_hint: {'center_x':0.5,'center_y':0.5}
+
+
+            MDIconButton:
+                icon: "backburger"
+                user_font_size: root.back_button_size
+                pos_hint: {'center_x':0.05,'center_y':0.5}
+                on_release: app.swap_screen('1')
+
+            MDRaisedButton:
+                canvas.before:
+                    Color:
+                        rgba: hex('#F2F3F4')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                
+                pos_hint: {'center_x':0.5,'center_y':0.5}
+                id: menu
+                text: "Select book"
+                on_release: root.menu_start()
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.9
+            size_hint_y: 0.74
+            id: learn_pool
+            pos_hint: {'center_x':0.5,'center_y':0.5}
+            
+
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_x: 0.9
+            size_hint_y: 0.14
+            id: bottom_menu
+            FloatLayout:
+                pos_hint: {'center_x': 0.5, 'center_y':0.5}
+                size_hint_x: 1
+                size_hint_y: 1
+                MDFlatButton:
+                    canvas.before:
+                        Color:
+                            rgba: hex('#F2F3F4')
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    id: start_but
+                    text: "Start"
+                    pos_hint: {'center_x': 0.5, 'center_y':0.5}
