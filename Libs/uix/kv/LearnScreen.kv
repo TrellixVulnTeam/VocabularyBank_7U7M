@@ -21,17 +21,22 @@
                 icon: "backburger"
                 user_font_size: root.back_button_size
                 pos_hint: {'center_x':0.05,'center_y':0.5}
-                on_release: app.swap_screen('1')
+                on_release:
+                    app.swap_screen('1')
+                    root.clear_learn_pool()
 
-            MDRaisedButton:
+            MDFlatButton:
+                pos_hint: {'center_x':0.5,'center_y':0.5}
+                width: '120sp'
+                font_size: 20
                 canvas.before:
                     Color:
                         rgba: hex('#F2F3F4')
-                    Rectangle:
+                    RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                
-                pos_hint: {'center_x':0.5,'center_y':0.5}
+                        radius: [2,2]
+
                 id: menu
                 text: "Select book"
                 on_release: root.menu_start()
@@ -43,13 +48,13 @@
             size_hint_y: 0.74
             id: learn_pool
             pos_hint: {'center_x':0.5,'center_y':0.5}
-            
+
 
 
 
         BoxLayout:
             orientation: 'horizontal'
-            size_hint_x: 0.9
+            size_hint_x: 1
             size_hint_y: 0.14
             id: bottom_menu
             FloatLayout:
@@ -60,9 +65,16 @@
                     canvas.before:
                         Color:
                             rgba: hex('#F2F3F4')
-                        Rectangle:
+                        RoundedRectangle:
                             pos: self.pos
                             size: self.size
+                            radius: [2,2]
                     id: start_but
                     text: "Start"
+                    font_size: 22
+                    size_hint_y:0.6
+                    size_hint_x:0.5
+
                     pos_hint: {'center_x': 0.5, 'center_y':0.5}
+                    on_release:
+                        root.load_learning_pool()

@@ -1,4 +1,4 @@
-from distutils.command.build import build
+import time
 import sqlite3
 
 from pprint import pprint
@@ -108,7 +108,7 @@ class Main(MDApp):
 
     #zone to load learn screen (random or simple or.... )
     def load_learning(self,regime,*arg):
-        print(regime)
+        self.screens_obj[5].regime_name = regime
         self.swap_screen(('6'))
 
 
@@ -200,8 +200,10 @@ class Main(MDApp):
 
             going to ---> add_word_into_internal(*element of table)
         '''
+        start = time.time()
         for word in data:
             self.add_word_into_internal(word)
+        print(f"[Log   ] writed words {time.time()-start}")
 
     # start algortitm for loading words > build_screen > add_word_into_internal > (get screen with words list)
     def load_words(self, table_name):
@@ -213,13 +215,17 @@ class Main(MDApp):
             data is table of infor from Data/Base/Books.db - with name of table = table_name
         '''
         if self.is_tabele_with_name(table_name):
+            start = time.time()
             conn = sqlite3.connect("Data/Base/Books.db")
             cursor = conn.cursor()
             print(table_name[0])
             data = cursor.execute("SELECT * FROM " + '\''+table_name[0]+'\'')
             data = data.fetchall()
             conn.close()
+            print(f"[Log   ] geted infor from \'{table_name}\' {time.time()-start}")
             self.build_screen(data)
+
+
     #END FOR  zone with swap and bind internal book screen
 
     #START FOR zone where delete  book

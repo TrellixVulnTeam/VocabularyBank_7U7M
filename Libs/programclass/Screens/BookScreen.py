@@ -1,4 +1,5 @@
 import sqlite3
+import time
 from pprint import pprint
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget,OneLineAvatarIconListItem
 from kivymd.uix.button import MDFlatButton,MDRaisedButton
@@ -61,16 +62,18 @@ class BooksScreen(Screen):
     def load_words(self, table_name):
         if self.is_table_with_name(table_name) or table_name in self.created_table:
             self.table_internal_book_name = table_name
-
-            self.parent.get_screen("bookInternal").ids.search_field.hint_text = "Search in {}".format(table_name)
             
+            self.parent.get_screen("bookInternal").ids.search_field.hint_text = "Search in {}".format(table_name)
             conn = sqlite3.connect("Data/Base/Books.db")
             cursor = conn.cursor()
             data = cursor.execute("SELECT * FROM " + '\''+table_name+'\'')
 
             data = data.fetchall()
             conn.close()
+
             self.build_screen(data,table_name)
+
+            
 
     # check data base if exist table
     def is_table_with_name(self,name):

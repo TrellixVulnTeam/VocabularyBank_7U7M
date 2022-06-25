@@ -1,0 +1,79 @@
+
+<BattonBoxLayout>
+    canvas:
+        Color:
+            rgba: hex(root.bg_color)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    on_release:
+        root.animate_him(self)
+
+    MDLabel:
+        pos_hint: {"center_x":0.5,"center_y":0.5}
+        font_size: 32
+        halign:"center"
+
+
+<SimpleRegime>
+    spacing: 30
+    orientation: 'vertical'
+    size_hint_x: 0.82
+    size_hint_y: 0.8
+    pos_hint: {"center_x":0.5,"center_y":0.5}
+    BoxLayout:
+        pos_hint:{"center_x":0.5,'top':1}
+        id: word
+        canvas:
+            Color:
+                rgba: hex("#F6F6C4")
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size_hint_x: 0.8
+        size_hint_y: 0.1
+        MDLabel:
+            pos_hint: {"center_x":0.5,"center_y":0.5}
+            font_size: 42
+            halign:"center"
+
+
+
+    BoxLayout:
+        spacing: 20
+        pos_hint: {'bottom':1}
+        size_hint_x: 1
+        size_hint_y: 0.76
+        orientation: "vertical"
+        BoxLayout:
+            spacing: 20
+
+            pos_hint: {"center_y": 0.25}
+            size_hint_y: 0.46
+            size_hint_x: 1
+            orientation: 'horizontal'
+            BattonBoxLayout:
+                id: top_left
+                on_release: root.chek_valid()
+
+
+            BattonBoxLayout:
+                id: top_right
+                on_release: root.chek_valid()
+
+
+        BoxLayout:
+            spacing: 20
+
+            pos_hint: {"center_y": 0.75}
+            size_hint_y: 0.46
+            size_hint_x: 1
+            orientation: "horizontal"
+            BattonBoxLayout:
+                id: bottom_left
+                on_release: root.chek_valid()
+
+            BattonBoxLayout:
+                id: bottom_right
+                on_release: root.chek_valid()

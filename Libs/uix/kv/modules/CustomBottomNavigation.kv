@@ -3,7 +3,7 @@
     orientation: 'vertical'
     canvas:
         Color:
-            rgba: hex("#F6F6C4")
+            rgba: hex("#3A434B")
         Rectangle:
             pos: self.pos
             size: self.size
@@ -16,68 +16,68 @@
         #selected_color_background: get_color_from_hex("#97ecf8")
         #text_color_activate: 0, 0, 0, 1
 
+
     BoxLayout:
-        size_hint_x: 1
-        size_hint_y: 0.1
         canvas:
             Color:
                 rgba: hex("#3A434B")
             Rectangle:
                 pos: self.pos
                 size: self.size
-
-    BoxLayout:
-        size_hint_x: 1
-        size_hint_y: 0.8
-        orientation: 'horizontal'
-        BoxLayout:
-            size_hint_x: 0.35
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDIconButton:
-                id: Start
-                icon: "menu"
-                user_font_size: app.icon_main_menu_size
-                on_release:
-                    app.swap_screen('1')
+        size_hint_x: 0.95
+        size_hint_y: 0.9
+        pos_hint:{'bottom':1, 'center_x': 0.5}
 
         BoxLayout:
-
+            pos_hint:{'top':1, 'center_x': 0.5}
+            size_hint_x: 0.95
+            size_hint_y: 0.96
+            canvas:
+                Color:
+                    rgba: hex("#F6F6C4")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
             BoxLayout:
+                size_hint_x: 0.35
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 MDIconButton:
-                    id: Statistic
-                    icon: "chart-areaspline"
-                    user_font_size: app.icon_button_bot_menu_size
+                    id: Start
+                    icon: "menu"
+                    user_font_size: app.icon_main_menu_size
                     on_release:
-                        app.swap_screen('2')
+                        app.swap_screen('1')
 
             BoxLayout:
 
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                MDIconButton:
-                    id: Books
-                    icon: "bookshelf"
-                    user_font_size: app.icon_button_bot_menu_size
-                    on_release:
-                        app.swap_screen('3')
-                        app.load_books()
+                BoxLayout:
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDIconButton:
+                        id: Statistic
+                        icon: "chart-areaspline"
+                        user_font_size: app.icon_button_bot_menu_size
+                        on_release:
+                            app.swap_screen('2')
 
-            BoxLayout:
+                BoxLayout:
 
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                MDIconButton:
-                    id: Edit
-                    icon: "contrast"
-                    user_font_size: app.icon_button_bot_menu_size
-                    on_release:
-                        app.swap_screen('4')
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDIconButton:
+                        id: Books
+                        icon: "bookshelf"
+                        user_font_size: app.icon_button_bot_menu_size
+                        on_release:
+                            app.swap_screen('3')
+                            app.load_books()
 
-    BoxLayout:
-        size_hint_x: 1
-        size_hint_y: 0.1
-        canvas:
-            Color:
-                rgba: hex("#3A434B")
-            Rectangle:
-                pos: self.pos
-                size: self.size
+                BoxLayout:
+
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDIconButton:
+                        id: Edit
+                        icon: "contrast"
+                        user_font_size: app.icon_button_bot_menu_size
+                        on_release:
+                            app.swap_screen('4')
+
