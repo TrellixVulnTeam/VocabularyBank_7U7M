@@ -1,46 +1,27 @@
 from pprint import pprint
+
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.boxlayout import MDBoxLayout
-import time
-import random
-
 
 from kivy.animation import Animation
-
 from kivy.metrics import sp
-
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 
-from Libs.programclass.modules.regimes.SimpleRegime import SimpleRegime
+from Libs.programclass.modules.regimes.SimpleRegime import SimpleRegime,RestartButton
 from Libs.programclass.modules.regimes.RundomRegime import RundomRegime
-
 
 
 from kivy.properties import StringProperty
 
 import sqlite3
-
-
-
-
-class BattonBoxLayout(ButtonBehavior, BoxLayout):
-    bg_color = StringProperty("FFFFE4")
-    def animate_him(self,widget):
-    #     anim = Animation(bg_color=StringProperty("FFFFE4")) + Animation( bg_color=StringProperty("FFFF9D"))
-    #     anim.repeat = False
-    #     anim.start(self)
-        pass
-
+import time
+import random
 
 
 class LearnScreen(Screen):
 
     back_button_size = StringProperty("46sp")
     regime_name = ""
-    visited_word_indexs = []
-    indexs = []
 
 
 
@@ -99,17 +80,19 @@ class LearnScreen(Screen):
     
     def write_random(self,data,lens,status):
         if status == 0:
-            tried_word = random.randint(0,lens-1)  
-            while tried_word in self.visited_word_indexs:
-                tried_word = random.randint(0,lens-1)
+            self.tried_word = random.randint(0,lens-1)  
+            while self.tried_word in self.add_element.visited_word_indexs:
+                self.tried_word = random.randint(0,lens-1)
               
-            self.visited_word_indexs.append(tried_word)
-            if len(self.visited_word_indexs) == lens:
-                self.visited_word_indexs = []
-            self.indexs = [i for i in range(lens) if i != tried_word]
-            random.shuffle(self.indexs)
-            pprint((self.indexs,tried_word))
-            self.add_infor_in_learn_pool(tried_word,data)
+            self.add_element.visited_word_indexs.append(self.tried_word)
+            if len(self.add_element.visited_word_indexs) == lens:
+                self.add_element.visited_word_indexs = []
+            self.add_element.indexs = [i for i in range(lens) if i != self.tried_word]
+            random.shuffle(self.add_element.indexs)
+            pprint((self.add_element.indexs,self.tried_word))
+
+            self.tried_word_data = data[self.tried_word]
+            self.add_infor_in_learn_pool(self.tried_word,data)
 
 
     def add_infor_in_learn_pool(self,index,data,inverse=False):
@@ -117,32 +100,49 @@ class LearnScreen(Screen):
         if inverse == True:
             data_pointer = (1,0)
 
+        # set data arrgs for butbox objs
+
+        setattr(self.add_element.ids.top_left, "data", self.tried_word_data)
+        setattr(self.add_element.ids.top_right, "data", self.tried_word_data)
+        setattr(self.add_element.ids.bottom_left, "data", self.tried_word_data)
+        setattr(self.add_element.ids.bottom_right, "data", self.tried_word_data)
+
         self.add_element.ids.word.children[0].text = data[index][data_pointer[0]]
 
         real_index = random.randint(0,3)
         if real_index != 0:
-            self.add_element.ids.top_left.children[0].text = data[self.indexs[0]][data_pointer[1]]
+            self.add_element.ids.top_left.children[0].text = data[self.add_element.indexs[0]][data_pointer[1]]
         else:
             self.add_element.ids.top_left.children[0].text = data[index][data_pointer[1]]
             
 
         if real_index != 1:
-            self.add_element.ids.top_right.children[0].text = data[self.indexs[1]][data_pointer[1]]
+            self.add_element.ids.top_right.children[0].text = data[self.add_element.indexs[1]][data_pointer[1]]
         else:
             self.add_element.ids.top_right.children[0].text = data[index][data_pointer[1]]
 
 
         if real_index != 2:
-            self.add_element.ids.bottom_left.children[0].text = data[self.indexs[2]][data_pointer[1]]
+            self.add_element.ids.bottom_left.children[0].text = data[self.add_element.indexs[2]][data_pointer[1]]
         else:
             self.add_element.ids.bottom_left.children[0].text = data[index][data_pointer[1]]
 
 
         if real_index != 3:
-            self.add_element.ids.bottom_right.children[0].text = data[self.indexs[3]][data_pointer[1]]
+            self.add_element.ids.bottom_right.children[0].text = data[self.add_element.indexs[3]][data_pointer[1]]
         else:
             self.add_element.ids.bottom_right.children[0].text = data[index][data_pointer[1]]
 
+
+    # ater start events
+    def disbale_buttons(self):
+        self.ids.start_but.disable = True
+        self.ids.menu.disabel = True
+
+
+    def add_restart_button(self):
+        self.resturt_button_obj = RestartButton()
+        self.ids.beginning_end_lay.add_widget(self.resturt_button_obj)
 
 
 
@@ -150,12 +150,18 @@ class LearnScreen(Screen):
         if self.regime_name == "Standart":
             if self.ids.menu.text != "Select book":
                 if not hasattr(self,'add_element'):
-                    self.add_element = SimpleRegime()
-                    self.ids.learn_pool.add_widget(self.add_element)
                     self.data = self.get_infor(self.ids.menu.text)
                     self.max_len = len(self.data)
+                    self.add_element = SimpleRegime()
+                    self.ids.learn_pool.add_widget(self.add_element)
 
-                self.write_random(self.data,self.max_len,0)
+                    setattr(self.add_element,'data_base_data',self.data)
+                    setattr(self.add_element, "data_base_data_max_len",self.max_len)
+
+                    self.write_random(self.data,self.max_len,0)
+                    self.disbale_buttons()
+                    self.add_restart_button()
+
 
             else:
                 pass

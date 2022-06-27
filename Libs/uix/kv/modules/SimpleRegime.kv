@@ -1,22 +1,39 @@
 
 <BattonBoxLayout>
+    data: app.get_tried_word()
+    but_color: (255/255.0, 255/255.0, 157/255.0, 1)
     canvas:
         Color:
-            rgba: hex(root.bg_color)
+            rgba: self.but_color
         Rectangle:
             pos: self.pos
             size: self.size
-
-    on_release:
-        root.animate_him(self)
 
     MDLabel:
         pos_hint: {"center_x":0.5,"center_y":0.5}
         font_size: 32
         halign:"center"
 
+<RestartButton>:
+    canvas.before:
+        Color:
+            rgba: hex('#F2F3F4')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [2,2]
+    id: start_but
+    text: "Restart"
+    font_size: 22
+    size_hint_y:0.6
+    size_hint_x:0.4
 
 <SimpleRegime>
+    #custom parameters
+    data_base_data: None
+    data_base_data_max_len: None
+    tried_word_data: None
+
     spacing: 30
     orientation: 'vertical'
     size_hint_x: 0.82
@@ -55,12 +72,14 @@
             orientation: 'horizontal'
             BattonBoxLayout:
                 id: top_left
-                on_release: root.chek_valid()
+                on_release:
+                    root.chek_valid(self)
 
 
             BattonBoxLayout:
                 id: top_right
-                on_release: root.chek_valid()
+                on_release:
+                    root.chek_valid(self)
 
 
         BoxLayout:
@@ -72,8 +91,10 @@
             orientation: "horizontal"
             BattonBoxLayout:
                 id: bottom_left
-                on_release: root.chek_valid()
+                on_release:
+                    root.chek_valid(self)
 
             BattonBoxLayout:
                 id: bottom_right
-                on_release: root.chek_valid()
+                on_release:
+                    root.chek_valid(self)

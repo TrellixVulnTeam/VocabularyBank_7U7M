@@ -58,6 +58,7 @@
             size_hint_y: 0.14
             id: bottom_menu
             FloatLayout:
+                id: beginning_end_lay
                 pos_hint: {'center_x': 0.5, 'center_y':0.5}
                 size_hint_x: 1
                 size_hint_y: 1
@@ -78,3 +79,5 @@
                     pos_hint: {'center_x': 0.5, 'center_y':0.5}
                     on_release:
                         root.load_learning_pool()
+
+

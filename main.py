@@ -47,6 +47,7 @@ Window.left = 500
 
 
 class Main(MDApp):
+    data = ''
     load_books_triger = False
     delete_dialog = None
     screen_is_displayed = "menu"
@@ -103,6 +104,10 @@ class Main(MDApp):
             sm.add_widget(element_screen)
 
         return sm  
+
+
+    def get_tried_word(self):
+        return self.root.get_screen("menu").data
 
 
 

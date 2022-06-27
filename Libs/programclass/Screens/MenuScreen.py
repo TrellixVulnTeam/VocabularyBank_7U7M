@@ -7,6 +7,8 @@ import sqlite3
 
 
 class MenuScreen(Screen):
+    data = ""
+
     #------------------- will edit
     def load_execute_books(self):
         conn = sqlite3.connect("Data/Base/Books.db")
