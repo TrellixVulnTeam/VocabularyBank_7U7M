@@ -23,6 +23,7 @@
                 pos_hint: {'center_x':0.05,'center_y':0.5}
                 on_release:
                     app.swap_screen('1')
+                    root.redisable_all()
                     root.clear_learn_pool()
 
             MDFlatButton:

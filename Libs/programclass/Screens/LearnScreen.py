@@ -19,9 +19,9 @@ import random
 
 
 class LearnScreen(Screen):
-
     back_button_size = StringProperty("46sp")
     regime_name = ""
+    get_out = True
 
 
 
@@ -29,6 +29,7 @@ class LearnScreen(Screen):
         if hasattr(self,'add_element'):
             self.ids.learn_pool.remove_widget(self.add_element)
         self.ids.menu.text = "Select book"
+        self.get_out = True
 
 
     def get_book_from_db(self):
@@ -134,10 +135,12 @@ class LearnScreen(Screen):
             self.add_element.ids.bottom_right.children[0].text = data[index][data_pointer[1]]
 
 
-    # ater start events
-    def disbale_buttons(self):
-        self.ids.start_but.disable = True
-        self.ids.menu.disabel = True
+    # after start events
+    def disbale_buttons(self,disable_status=True,opacity_status=0):
+        self.ids.start_but.disabled = disable_status
+        self.ids.start_but.opacity = opacity_status
+        self.ids.menu.disabled = disable_status
+        self.ids.menu.opacity = opacity_status
 
 
     def add_restart_button(self):
@@ -145,11 +148,19 @@ class LearnScreen(Screen):
         self.ids.beginning_end_lay.add_widget(self.resturt_button_obj)
 
 
+    def remuve_restart_button(self):
+        self.ids.beginning_end_lay.remove_widget(self.resturt_button_obj)
+
+
+    def redisable_all(self):
+        self.disbale_buttons(False,1)
+        self.remuve_restart_button()
+
 
     def load_learning_pool(self):
         if self.regime_name == "Standart":
             if self.ids.menu.text != "Select book":
-                if not hasattr(self,'add_element'):
+                if self.get_out:
                     self.data = self.get_infor(self.ids.menu.text)
                     self.max_len = len(self.data)
                     self.add_element = SimpleRegime()
@@ -157,10 +168,15 @@ class LearnScreen(Screen):
 
                     setattr(self.add_element,'data_base_data',self.data)
                     setattr(self.add_element, "data_base_data_max_len",self.max_len)
-
                     self.write_random(self.data,self.max_len,0)
                     self.disbale_buttons()
                     self.add_restart_button()
+                    self.get_out = False
+
+
+                else:
+                    pass
+
 
 
             else:
