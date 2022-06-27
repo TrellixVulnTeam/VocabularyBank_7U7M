@@ -6,79 +6,61 @@
         size_hint:1,1
         canvas:
             Color:
-                rgba: hex('#3A434B')
+                rgba: hex(app.bg_screens_color)
             Rectangle:
                 pos: self.pos
                 size: self.size
-        orientation: "horizontal"
+        orientation: "vertical"
         BoxLayout:
             canvas:
                 Color:
-                    rgba: hex("#F6F6C4")
+                    rgba: hex(app.bg_screens_color)
                 Rectangle:
                     pos: self.pos
                     size: self.size
 
-            size_hint_y: 0.98
-            size_hint_x: 0.11
-            id: left_pool
-            orientation: "vertical"
-            pos_hint: {'left':1,'center_y':0.5}
-            BoxLayout:
-                size_hint_x: 1
-                size_hint_y: 0.2
-                pos_hint: {'top':1}
-                MDIconButton:
-                    icon: "backburger"
-                    user_font_size: root.icon_left_menu_botton_size
-                    pos_hint: {'center_x': 0.5, 'top':1}
-                    on_release: app.swap_screen('3')
-
-            BoxLayout:
-                size_hint_x: 1
-                size_hint_y: 0.6
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-
-            BoxLayout:
-                pos_hint: {'bottom':1}
-                size_hint_x: 1
-                size_hint_y: 0.2
-                MDIconButton:
-                    icon: "plus"
-                    user_font_size: root.icon_left_menu_botton_size
-                    pos_hint: {'center_x': 0.5, 'bottom':1}
-                    on_release: 
-                        root.add_word_dialog()
-
-        BoxLayout:
-            canvas:
-                Color:
-                    rgba: hex('#FFFFE4')
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
             id: word_list
             orientation: "vertical"
             size_hint_y: 0.98
-            size_hint_x: 0.88
+            size_hint_x: 0.96
             pos_hint: {'right':1,'center_y':0.5}
+            id: top_partical
+            pos_hint: {"top": 1}
+            orientation: 'horizontal'
+            size_hint_x: 1
+            size_hint_y: 0.1
+            BoxLayout:                    
+                size_hint_x: 0.12
+                size_hint_y: 1
+                orientation: 'horizontal'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                MDIconButton:
+                    icon: "backburger"
+                    text_color: hex(app.icon_but_colors)
+                    theme_text_color:"Custom"
+                    user_font_size: root.icon_left_menu_botton_size
+                    pos_hint: {'center_x': 0.5, 'center_y':0.5}
+                    on_release: app.swap_screen('3')
 
             BoxLayout:
-                id: top_partical
-                pos_hint: {"top": 1}
+                size_hint_x: 0.88
+                size_hint_y: 1
                 orientation: 'horizontal'
-                size_hint_x: 1
-                size_hint_y: 0.1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 MDIconButton:
-                    pos_hint: {"right": 1}
+                    pos_hint: {"right": 1, 'center_y': 0.5}
                     user_font_size: root.icon_filter_size
                     id: filters_menu
                     icon: "filter-menu"
-
+                    text_color: hex(app.icon_but_colors)
+                    theme_text_color:"Custom"
 
                 MDTextField:
                     id: search_field
+                    line_color_focus: hex(app.text_file_colors_hint)
+                    line_color_normal: hex(app.text_file_colors_hint)
+                    text_color: hex(app.text_file_colors)
+                    current_hint_text_color: hex(app.text_file_colors_hint)
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     font_size: root.font_size_search_field
                     multiline: False
@@ -88,14 +70,65 @@
                     id: search
                     icon: 'magnify'
                     user_font_size: root.icon_search_size
-                    pos_hint: {"left": 1}
+                    pos_hint: {"left": 1,'center_y': 0.5}
+                    text_color: hex(app.icon_but_colors)
+                    theme_text_color:"Custom"
 
 
-            ScrollView:
-                id: list_view
-                size_hint_x: 0.9
-                do_scroll_x: False
-                do_scroll_y: True
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-                WordsList:
+
+        BoxLayout:
+            canvas:
+                Color:
+                    rgba: hex(app.bg_screens_color)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            size_hint_y: 1
+            size_hint_x: 1
+            id: left_pool
+            orientation: "horizontal"
+            pos_hint: {'left':1}
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: 0.1
+                size_hint_y: 1
+                BoxLayout:
+                    size_hint_x: 1
+                    size_hint_y: 0.2
+                    pos_hint: {'top':1}
+
+
+                BoxLayout:
+                    size_hint_x: 1
+                    size_hint_y: 0.6
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+                BoxLayout:
+                    pos_hint: {'center_x': 0.5,'bottom':1}
+                    size_hint_x: 1
+                    size_hint_y: 0.2
+                    MDIconButton:
+                        icon: "plus"
+                        user_font_size: root.icon_left_menu_botton_size
+                        pos_hint: {'center_x': 0.5, 'bottom':1}
+                        text_color: hex(app.icon_but_colors)
+                        theme_text_color:"Custom"
+                        on_release:
+                            root.add_word_dialog()
+
+
+            BoxLayout:
+                size_hint_x:0.9
+                size_hint_y: 0.96
+                pos_hint:{"top":1}
+                ScrollView:
+                    id: list_view
+                    size_hint_x: 0.98
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                    WordsList:

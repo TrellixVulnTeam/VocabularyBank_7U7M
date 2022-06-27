@@ -18,71 +18,17 @@ BoxLayout:
     BoxLayout:
         canvas:
             Color:
-                rgba: hex("#F6F6C4")
+                rgba: hex("#212121")
             Rectangle:
                 pos: self.pos
                 size: self.size
         size_hint_x: 1
         size_hint_y: 0.2
         pos_hint: {'top':1}
-        MDLabel:
-
-    BoxLayout:
-        spacing: 20
-        pos_hint: {'bottom':1}
-        size_hint_x: 1
-        size_hint_y: 0.76
-        orientation: "vertical"
-        BoxLayout:
-            spacing: 20
-
-            pos_hint: {"center_y": 0.25}
-            size_hint_y: 0.46
-            size_hint_x: 1
-            orientation: 'horizontal'
-            BoxLayout:
-                canvas:
-                    Color:
-                        rgba: hex("#F6F6C4")
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                id: top_left
-
-            BoxLayout:
-                canvas:
-                    Color:
-                        rgba: hex("#F6F6C4")
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                id: top_right
-
-
-        BoxLayout:
-            spacing: 20
-
-            pos_hint: {"center_y": 0.75}
-            size_hint_y: 0.46
-            size_hint_x: 1
-            orientation: "horizontal"
-            BoxLayout:
-                canvas:
-                    Color:
-                        rgba: hex("#F6F6C4")
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                id: bottom_left
-
-            BoxLayout:
-                canvas:
-                    Color:
-                        rgba: hex("#F6F6C4")
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                id: bottom_right
+        MDIconButton:
+            icon: "account"
+            text_color: hex(app.icon_but_colors)
+            theme_text_color:"Custom"
 
     
 
@@ -95,6 +41,7 @@ BoxLayout:
 
 class MainAPP(MDApp):
     list_buttons = []
+    col = "#F6F6C4"
 
     def build(self):
         return Builder.load_string(kv)

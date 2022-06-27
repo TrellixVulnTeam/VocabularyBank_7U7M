@@ -153,8 +153,9 @@ class LearnScreen(Screen):
 
 
     def redisable_all(self):
-        self.disbale_buttons(False,1)
-        self.remuve_restart_button()
+        if hasattr(self,"resturt_button_obj"):
+            self.disbale_buttons(False,1)
+            self.remuve_restart_button()
 
 
     def load_learning_pool(self):

@@ -3,10 +3,15 @@
 <CustomList>
     size_hint_y: None
     size_y: "23dp"
-	size_hint_x: 0.8
+	size_hint_x: 0.96
     canvas.before:
         Color:
-            rgba: .5, .5, .5, 1
+            rgba: hex(app.bg_screens_whitly_color)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: hex(app.bg_screens_border_color)
         Line:
             width: 1
             rectangle: self.x, self.y, self.width, self.height
@@ -15,78 +20,104 @@
 	pos_hint: { 'top': 1,'center_x':0.5 }
 
     BoxLayout:
+        canvas.before:
+            Color:
+                rgba: hex(app.bg_screens_whitly_color)
+            Rectangle:
+                pos: self.pos
+                size: self.size
         pos_hint: { 'center_y': 0.5,'center_x':0.5 }
         size_hint_x:0.95
         size_hint_y:0.95
 
 	    orientation: 'horizontal'
+        BoxLayout:
+            pos_hint: {'left':1}
+            size_hint_x: 0.7
+            size_hint_y:1
+            spacing: 5
+            orientation: 'vertical'
+            MDLabel:
+                halign: 'left'
+                valign: 'center'
+                id: word
+                markup: True
+                text: f"[ref='']{root.Label_menu_texts['word']}[/ref]"
+                font_style: root.Label_font_style
+                font_size: root.Label_font_size
+                theme_text_color: "Custom"
+                text_color: hex(app.label_text_colors)
+                max_lines: 1
+                on_ref_press:
+                    root.reset_word_menu()
 
-        MDLabel:
-            size_hint_x: 0.235
-            id: word
-            markup: True
-            text: f"[ref='']{root.Label_menu_texts['word']}[/ref]"
-            font_style: root.Label_font_style
-            font_size: root.Label_font_size
-            theme_text_color: "Custom"
-            text_color: root.text_color_miss
-            max_lines: 1
-            on_ref_press:
-                root.reset_word_menu()
+            MDLabel:
+                halign: 'left'
+                valign: 'center'
+                id: transcription
+                markup: True
+                text: f"[ref='']{root.Label_menu_texts['transcription']}[/ref]"
+                theme_text_color: "Custom"
+                text_color: hex(app.label_text_colors_hint)
+                font_style: root.Label_font_style
+                font_size: root.Label_font_size
+                max_lines: 1
+                on_ref_press:
+                    root.reset_transcription_menu()
 
-        MDLabel:
-            size_hint_x: 0.235
-            id: translate
-            markup: True
-            text: f"[ref='']{root.Label_menu_texts['translate']}[/ref]"
-            font_style: root.Label_font_style
-            font_size: root.Label_font_size
-            theme_text_color: "Custom"
-            text_color: root.text_color_miss
-            max_lines: 1
-            on_ref_press:
-                root.reset_translate_menu()
+            MDLabel:
+                halign: 'left'
+                valign: 'center'
+                id: asociations
+                markup: True
+                text: f"[ref='']{root.Label_menu_texts['asociations']}[/ref]"
+                font_style: root.Label_font_style
+                font_size: root.Label_font_size
+                theme_text_color: "Custom"
+                text_color: hex(app.label_text_colors_hint_hint)
+                max_lines: 1
+                on_ref_press:
+                    root.reset_asociations_menu()
 
-        MDLabel:
-            size_hint_x: 0.235
-            id: transcription
-            markup: True
-            text: f"[ref='']{root.Label_menu_texts['transcription']}[/ref]"
-            theme_text_color: "Custom"
-            font_style: root.Label_font_style
-            font_size: root.Label_font_size
-            text_color: root.text_color_miss
-            max_lines: 1
-            on_ref_press:
-                root.reset_transcription_menu()
+            MDLabel:
+                halign: 'left'
+                valign: 'center'
+                id: translate
+                markup: True
+                text: f"[ref='']{root.Label_menu_texts['translate']}[/ref]"
+                font_style: root.Label_font_style
+                font_size: root.Label_font_size
+                theme_text_color: "Custom"
+                text_color: hex(app.label_text_colors_hint_hint)
+                max_lines: 1
+                on_ref_press:
+                    root.reset_translate_menu()
 
-        MDLabel:
-            size_hint_x: 0.075
-            id: status
-            markup: True
-            text: f"[ref='']{root.Label_menu_texts['status']}[/ref]"
-            font_style: root.Label_font_style
-            font_size: root.Label_font_size
-            theme_text_color: "Custom"
-            text_color: root.text_color_miss
-            max_lines: 1
-            on_ref_press:
-                root.reset_status_menu()
 
-        MDLabel:
-            size_hint_x: 0.1
-            id: asociations
-            markup: True
-            text: f"[ref='']{root.Label_menu_texts['asociations']}[/ref]"
-            font_style: root.Label_font_style
-            font_size: root.Label_font_size
-            theme_text_color: "Custom"
-            text_color: root.text_color_miss
-            max_lines: 1
-            on_ref_press:
-                root.reset_asociations_menu()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_x: 0.3
+            size_hint_y: 1
+            pos_hint: {'right':1}
+
+            MDLabel:
+                halign: 'center'
+                valign: 'center'
+                id: status
+                markup: True
+                text: f"[ref='']{root.Label_menu_texts['status']}[/ref]"
+                font_style: root.Label_font_style
+                font_size: root.Label_font_size
+                theme_text_color: "Custom"
+                text_color: hex(app.label_text_colors)
+                max_lines: 1
+                on_ref_press:
+                    root.reset_status_menu()
+
 
         MDIconButton:
+            text_color: hex(app.icon_but_colors)
+            theme_text_color:"Custom"
             icon: "square-edit-outline"
             pos_hint: { 'center_y': 0.5,'center_x':0.5 }
             on_release: root.rewrite_word(self.parent)

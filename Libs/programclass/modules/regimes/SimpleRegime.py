@@ -28,15 +28,21 @@ class SimpleRegime(BoxLayout):
 
     animations = {
         'win': Animation(
-            but_color=(167/255.0,255/255.0,100/255.0,1)
+            but_color=(167/255.0,255/255.0,100/255.0,1),
+            duration=0.25,
+            t='out_back',
         ) + Animation(
-            but_color=(255/255.0, 255/255.0, 157/255.0, 1)
+            but_color=(255/255.0, 255/255.0, 157/255.0, 1),
+            duration=0.1,
         ),
 
         'lose': Animation(
-            but_color=(226/255.0,43/255.0,43/255.0,1)
+            but_color=(226/255.0,43/255.0,43/255.0,1),
+            duration=0.25,
+            t='out_back',
         ) + Animation(
-            but_color=(255/255.0, 255/255.0, 157/255.0, 1)
+            but_color=(255/255.0, 255/255.0, 157/255.0, 1),
+            duration=0.1,
         ),
     }
 

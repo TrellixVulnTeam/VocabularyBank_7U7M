@@ -1,7 +1,5 @@
 #:import hex kivy.utils.get_color_from_hex
 
-
-
 <MenuScreen>:
     name: 'menu'
     BoxLayout:
@@ -10,7 +8,7 @@
         orientation: "vertical"
         canvas:
             Color:
-                rgba: hex('#3A434B')
+                rgba: hex(app.bg_screens_color)
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -21,7 +19,7 @@
             pos_hint: {"top": 1,'center_x':0.5}
             canvas:
                 Color:
-                    rgba: hex('#3A434B')
+                    rgba: hex(app.bg_screens_color)
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -29,7 +27,7 @@
             BoxLayout:
                 canvas:
                     Color:
-                        rgba: hex("#F6F6C4")
+                        rgba: hex(app.bg_screens_whitly_color)
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -48,6 +46,8 @@
                     size_hint_x: 0.96
 
                     MDIconButton:
+                        text_color: hex(app.icon_but_colors)
+                        theme_text_color:"Custom"
                         id: Settings
                         icon: "cog-outline"
                         user_font_size: "32sp"
@@ -55,6 +55,8 @@
                         pos_hint: {"left":1, 'center_x': 0.9,'center_y': 0.5}
 
                     MDLabel:
+                        theme_text_color: "Custom"
+                        text_color: hex(app.label_text_colors)
                         id: Random_word
                         size_hint: 0.6, 1
                         text: "This is a plays for rand word"
@@ -64,6 +66,8 @@
 
 
                     MDIconButton:
+                        text_color: hex(app.icon_but_colors)
+                        theme_text_color:"Custom"
                         id: Localization
                         icon: "earth"
 
@@ -94,7 +98,7 @@
                         padding: 30,10,30,10
                         canvas:
                             Color:
-                                rgba: hex('#FFFFE4')
+                                rgba: hex(app.bg_screens_whitly_color)
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -108,14 +112,13 @@
                             background_color: 0,0,0,0
                             canvas.before:
                                 Color:
-                                    rgba: hex('#4E575F')
+                                    rgba: hex(app.icon_but_colors)
 
                                 RoundedRectangle:
                                     pos: self.pos
                                     size: self.size
                                     radius: [5,5]
                             font_size: "18sp"
-                            md_bg_color: "#3A4353"
                             text_color: "#212121"
                             pos_hint: {'left':1, 'center_y': 0.5}
                             text: "Standart"
@@ -127,11 +130,13 @@
                             valign: 'center'
                             canvas.before:
                                 Color:
-                                    rgba: hex('#FFFFE4')
+                                    rgba: hex(app.bg_screens_whitly_color)
                                 Rectangle:
                                     pos: self.pos
                                     size: self.size
                             pos_hint: {'right':1, 'center_y': 0.5}
+                            theme_text_color: "Custom"
+                            text_color: hex(app.label_text_colors)
                             text: "You get one word from one selected dict "
 
 
@@ -140,7 +145,7 @@
                         padding: 30,10,30,10
                         canvas.before:
                             Color:
-                                rgba: hex('#FFFFE4')
+                                rgba: hex(app.bg_screens_whitly_color)
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -156,7 +161,7 @@
                             background_color: 0,0,0,0
                             canvas.before:
                                 Color:
-                                    rgba: hex('#4E575F')
+                                    rgba: hex(app.icon_but_colors)
 
                                 RoundedRectangle:
                                     pos: self.pos
@@ -175,11 +180,12 @@
                             valign: 'center'
                             canvas.before:
                                 Color:
-                                    rgba: hex('#FFFFE4')
+                                    rgba: hex(app.bg_screens_whitly_color)
                                 Rectangle:
                                     pos: self.pos
                                     size: self.size
-
+                            theme_text_color: "Custom"
+                            text_color: hex(app.label_text_colors)
                             pos_hint: {'right':1, 'center_y': 0.5}
                             text: "You get randomly word from all your dict "
 

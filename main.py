@@ -1,7 +1,9 @@
+from distutils import text_file
 import time
 import sqlite3
 
 from pprint import pprint
+from turtle import color
 from Libs.programclass.Screens.LearnScreen import LearnScreen
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
@@ -22,6 +24,7 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
+from kivy.utils import get_color_from_hex
 
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
@@ -47,6 +50,17 @@ Window.left = 500
 
 
 class Main(MDApp):
+    bg_screens_border_color = "313131"
+    bg_screens_color = "#141414"
+    bg_screens_whitly_color = "212121"
+    icon_but_colors = "#F6F6C4"
+    icon_but_colors_hint = "#8B8B6F"
+    label_text_colors = "#F6F6C4"
+    label_text_colors_hint = "#8B8B6F"
+    label_text_colors_hint_hint = "#77775F"
+    text_file_colors_hint = "#8B8B6F"
+    text_file_colors = "#F6F6C4"
+
     data = ''
     load_books_triger = False
     delete_dialog = None
@@ -349,15 +363,23 @@ class Main(MDApp):
         but = ThreeLineAvatarIconListItem(
             text="{}".format( new_book_name ),
             secondary_text="{} words in it".format( new_book_word_number ),
-            on_release= lambda x: self.swap_screen(('5'),new_book_name)
+            secondary_theme_text_color="Custom",
+            secondary_text_color=get_color_from_hex(self.label_text_colors_hint),
+            on_release= lambda x: self.swap_screen(('5'),new_book_name),
+            theme_text_color="Custom",
+            text_color=get_color_from_hex(self.label_text_colors),
         )
         del_item = IconLeftWidget(
             icon="delete",
-            on_release= lambda y,z = but: self.wont_to_del_menu(z)
+            on_release= lambda y,z = but: self.wont_to_del_menu(z),
+            text_color=get_color_from_hex(self.icon_but_colors),
+            theme_text_color="Custom"
         )
         edit_item= IconRightWidget(
             icon="book-edit",
-            on_release= lambda x: self.edit_menu()
+            on_release= lambda x: self.edit_menu(),
+            text_color=get_color_from_hex(self.icon_but_colors),
+            theme_text_color="Custom"
         )
         but.add_widget(del_item)
         but.add_widget(edit_item)

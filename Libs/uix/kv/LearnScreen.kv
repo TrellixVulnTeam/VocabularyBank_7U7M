@@ -6,7 +6,7 @@
         orientation: "vertical"
         canvas:
             Color:
-                rgba: hex('#3A434B')
+                rgba: hex(app.bg_screens_color)
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -18,6 +18,8 @@
 
 
             MDIconButton:
+                text_color: hex(app.icon_but_colors)
+                theme_text_color:"Custom"
                 icon: "backburger"
                 user_font_size: root.back_button_size
                 pos_hint: {'center_x':0.05,'center_y':0.5}
@@ -80,5 +82,4 @@
                     pos_hint: {'center_x': 0.5, 'center_y':0.5}
                     on_release:
                         root.load_learning_pool()
-
 

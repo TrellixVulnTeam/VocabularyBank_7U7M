@@ -3,7 +3,7 @@
     orientation: 'vertical'
     canvas:
         Color:
-            rgba: hex("#3A434B")
+            rgba: hex(app.bg_screens_color)
         Rectangle:
             pos: self.pos
             size: self.size
@@ -20,7 +20,7 @@
     BoxLayout:
         canvas:
             Color:
-                rgba: hex("#3A434B")
+                rgba: hex(app.bg_screens_color)
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -34,7 +34,7 @@
             size_hint_y: 0.96
             canvas:
                 Color:
-                    rgba: hex("#F6F6C4")
+                    rgba: hex(app.bg_screens_whitly_color)
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -43,6 +43,8 @@
                 size_hint_x: 0.35
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 MDIconButton:
+                    text_color: hex(app.icon_but_colors)
+                    theme_text_color:"Custom"
                     id: Start
                     icon: "menu"
                     user_font_size: app.icon_main_menu_size
@@ -54,6 +56,8 @@
                 BoxLayout:
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     MDIconButton:
+                        text_color: hex(app.icon_but_colors)
+                        theme_text_color:"Custom"
                         id: Statistic
                         icon: "chart-areaspline"
                         user_font_size: app.icon_button_bot_menu_size
@@ -64,6 +68,8 @@
 
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     MDIconButton:
+                        text_color: hex(app.icon_but_colors)
+                        theme_text_color:"Custom"
                         id: Books
                         icon: "bookshelf"
                         user_font_size: app.icon_button_bot_menu_size
@@ -75,6 +81,8 @@
 
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     MDIconButton:
+                        text_color: hex(app.icon_but_colors)
+                        theme_text_color:"Custom"
                         id: Edit
                         icon: "contrast"
                         user_font_size: app.icon_button_bot_menu_size
