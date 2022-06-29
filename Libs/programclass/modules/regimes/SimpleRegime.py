@@ -1,4 +1,5 @@
 from pprint import pprint
+from tkinter.tix import InputOnly
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.animation import Animation
@@ -10,6 +11,7 @@ from kivy.properties import StringProperty
 from kivymd.uix.button import MDFlatButton
 
 import random
+import sqlite3
 
 
 class BattonBoxLayout(ButtonBehavior, BoxLayout):
@@ -24,6 +26,8 @@ class RestartButton(MDFlatButton):
 class SimpleRegime(BoxLayout):
     visited_word_indexs = []
     indexs = []
+    status_of_word = None
+    book_name = ''
     is_binded_animation = False
 
     animations = {
@@ -52,6 +56,14 @@ class SimpleRegime(BoxLayout):
             self.animations[status].start(widget)
 
 
+    def get_status(self):
+        return self.status_of_word
+
+
+    def get_book_data(self):
+        return self.book_name
+
+
     def win_event(self,widget):
         pprint(f"{widget.children[0].text} == {widget.data}")
         self.animation_boxbut('win',widget)
@@ -76,26 +88,28 @@ class SimpleRegime(BoxLayout):
 
 
         if (widget.children[0].text == widget.data[0] or widget.children[0].text == widget.data[1]):
+            self.status_of_word = "win"
             self.win_event(widget)
-        else: 
+            
+        else:
+            self.status_of_word = "lose"
             self.lose_event(widget)
 
 
     def write_random(self,data,lens,status):
         if status == 0:
-            print(type(lens))
-            print(type(data))
-
             self.tried_word = random.randint(0,lens-1)
             while self.tried_word in self.visited_word_indexs:
                 self.tried_word = random.randint(0,lens-1)
+                if len(self.visited_word_indexs) == lens:
+                    self.visited_word_indexs = []
               
             self.visited_word_indexs.append(self.tried_word)
-            if len(self.visited_word_indexs) == lens:
-                self.visited_word_indexs = []
             self.indexs = [i for i in range(lens) if i != self.tried_word]
             random.shuffle(self.indexs)
-            pprint((self.indexs,self.tried_word))
+            
+
+            pprint((self.indexs,self.tried_word,self.visited_word_indexs))
 
             self.tried_word_data = data[self.tried_word]
             self.add_infor_in_learn_pool(self.tried_word,data)

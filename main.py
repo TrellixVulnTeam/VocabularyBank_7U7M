@@ -1,5 +1,7 @@
 from distutils import text_file
+import statistics
 import time
+from datetime import date
 import sqlite3
 
 from pprint import pprint
@@ -7,12 +9,13 @@ from turtle import color
 from Libs.programclass.Screens.LearnScreen import LearnScreen
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
-from kivy.lang.builder import Builder
+
 from kivymd.uix.button import MDFlatButton,MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 
+from kivy.lang.builder import Builder
 from kivy.clock import Clock
 Clock.max_iteration = 30
 
@@ -61,6 +64,8 @@ class Main(MDApp):
     text_file_colors_hint = "#8B8B6F"
     text_file_colors = "#F6F6C4"
 
+
+
     data = ''
     load_books_triger = False
     delete_dialog = None
@@ -71,7 +76,11 @@ class Main(MDApp):
                 "size"	INTEGER NOT NULL );""",
             """
             SELECT db_name,size FROM Data_name_of_books
-            """
+            """,
+            ["""CREATE TABLE IF NOT EXISTS '""","""' (
+                "time"	TEXT NOT NULL UNIQUE,
+                "win"	INTEGER NOT NULL,
+                "lose"	INTEGER NOT NULL );"""]
             ]
 
     icon_button_top_menu_size = StringProperty("32sp")
@@ -122,6 +131,43 @@ class Main(MDApp):
 
     def get_tried_word(self):
         return self.root.get_screen("menu").data
+
+
+    
+    def add_statistic(self, status, book,*args):
+        pprint((book,status))
+        
+        inf_status = [1,0] if status == "win" else [0,1]
+
+        table_creator = self.sql_executes[2][0]+book+self.sql_executes[2][1]
+        now_time = date.today()
+        now_time = now_time.strftime("""%d %m %Y""")
+        conn = sqlite3.connect("Data/Base/Statistic.db")
+        cursor = conn.cursor()
+        cursor.execute(table_creator)
+
+        input_execute = """INSERT OR IGNORE INTO '"""+ book +"""'"""+"""VALUES(?,?,?)"""
+        if now_time[0]:
+            update_execute = """UPDATE '""" + book + """' SET 'win'='win'+1 WHERE 'time'=?"""
+        else:
+            update_execute = """UPDATE '""" + book + """' SET 'lose'='lose'+1 WHERE 'time'=?"""
+
+        start = time.time()
+
+    
+        cursor.execute(input_execute,(now_time,0,0))
+        conn.commit()
+        conn.close()
+
+        conn = sqlite3.connect("Data/Base/Statistic.db")
+        cursor = conn.cursor()
+        cursor.execute(update_execute,[now_time])
+        conn.commit()
+
+        
+        print(f"[Log   ] inputed into \'{book}\' {time.time()-start}")
+        pprint((now_time,inf_status[0],inf_status[1]))
+        conn.close()
 
 
 

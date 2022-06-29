@@ -1,4 +1,5 @@
 from pprint import pprint
+from turtle import width
 
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -44,9 +45,10 @@ class LearnScreen(Screen):
         book_items = self.get_book_from_db()
         menu_items = [
             {
-                "text": f"\"{item[0]}\"  words number {item[1]} ",
+                "text": f"{item[0]}",
                 "viewclass": "OneLineListItem",
                 "on_release": lambda x=f"{item[0]}": self.menu_callback(x),
+                "width": sp(120)
             } for item in book_items
             ]
         self.menu = MDDropdownMenu(
@@ -81,13 +83,17 @@ class LearnScreen(Screen):
     
     def write_random(self,data,lens,status):
         if status == 0:
-            self.tried_word = random.randint(0,lens-1)  
+
+
+            self.tried_word = random.randint(0,lens-1)
+
             while self.tried_word in self.add_element.visited_word_indexs:
+                if len(self.add_element.visited_word_indexs) == lens:
+                    self.add_element.visited_word_indexs = []
                 self.tried_word = random.randint(0,lens-1)
               
             self.add_element.visited_word_indexs.append(self.tried_word)
-            if len(self.add_element.visited_word_indexs) == lens:
-                self.add_element.visited_word_indexs = []
+
             self.add_element.indexs = [i for i in range(lens) if i != self.tried_word]
             random.shuffle(self.add_element.indexs)
             pprint((self.add_element.indexs,self.tried_word))
@@ -163,16 +169,34 @@ class LearnScreen(Screen):
             if self.ids.menu.text != "Select book":
                 if self.get_out:
                     self.data = self.get_infor(self.ids.menu.text)
+                    pprint('data geted')
+                    
                     self.max_len = len(self.data)
-                    self.add_element = SimpleRegime()
-                    self.ids.learn_pool.add_widget(self.add_element)
+                    if self.max_len != 0:
+                        pprint("len geted")
 
-                    setattr(self.add_element,'data_base_data',self.data)
-                    setattr(self.add_element, "data_base_data_max_len",self.max_len)
-                    self.write_random(self.data,self.max_len,0)
-                    self.disbale_buttons()
-                    self.add_restart_button()
-                    self.get_out = False
+                        self.add_element = SimpleRegime()
+                        self.add_element.book_name = self.ids.menu.text
+
+                        pprint("element created")
+
+                        self.ids.learn_pool.add_widget(self.add_element)
+
+                        pprint("element added into pool")
+
+
+                        setattr(self.add_element,'data_base_data',self.data)
+                        setattr(self.add_element, "data_base_data_max_len",self.max_len)
+
+                        pprint("set args")
+                        self.write_random(self.data,self.max_len,0)
+
+                        pprint("write complite")
+
+                        self.disbale_buttons()
+                        self.add_restart_button()
+                        pprint("reset buttons was made")
+                        self.get_out = False
 
 
                 else:

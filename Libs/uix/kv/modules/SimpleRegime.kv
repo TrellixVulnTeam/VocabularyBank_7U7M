@@ -18,7 +18,7 @@
 <RestartButton>:
     canvas.before:
         Color:
-            rgba: hex('#F2F3F4')
+            rgba: hex("F2F3F4")
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -55,6 +55,8 @@
         size_hint_x: 0.8
         size_hint_y: 0.1
         MDLabel:
+            theme_text_color: "Custom"
+            text_color: hex(app.label_text_colors)
             pos_hint: {"center_x":0.5,"center_y":0.5}
             font_size: 42
             halign:"center"
@@ -78,12 +80,15 @@
                 id: top_left
                 on_release:
                     root.chek_valid(self)
+                    app.add_statistic(root.get_status(),root.get_book_data(),self)
 
 
             BattonBoxLayout:
                 id: top_right
                 on_release:
                     root.chek_valid(self)
+                    app.add_statistic(root.get_status(),root.get_book_data(),self)
+
 
 
         BoxLayout:
@@ -97,8 +102,11 @@
                 id: bottom_left
                 on_release:
                     root.chek_valid(self)
+                    app.add_statistic(root.get_status(),root.get_book_data(),self)
+
 
             BattonBoxLayout:
                 id: bottom_right
                 on_release:
                     root.chek_valid(self)
+                    app.add_statistic(root.get_status(),root.get_book_data(),self)
