@@ -1,11 +1,9 @@
-from distutils import text_file
 import statistics
 import time
 from datetime import date
 import sqlite3
 
 from pprint import pprint
-from turtle import color
 from Libs.programclass.Screens.LearnScreen import LearnScreen
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
@@ -39,7 +37,7 @@ from Libs.programclass.Screens.BookScreen import BooksScreen
 from Libs.programclass.Screens.EdittingScreen import EdittingScreen
 from Libs.programclass.Screens.InternalMenuBookScreen import InternalMenuBookScreen
 from Libs.programclass.Screens.MenuScreen import MenuScreen
-from Libs.programclass.Screens.StatisticScreen import StatisticScreen
+from Libs.programclass.Screens.StatisticScreen import StatisticScreen,Statistic
 from Libs.programclass.modules.CustomBottomNavigation import CustomBottomNavigation
 from Libs.programclass.modules.CustomList import CustomList
 from Libs.programclass.modules.WordsList import WordsList
@@ -68,6 +66,7 @@ class Main(MDApp):
 
     data = ''
     load_books_triger = False
+    load_stats_triger = False
     delete_dialog = None
     screen_is_displayed = "menu"
     sql_executes = ["""
@@ -147,10 +146,10 @@ class Main(MDApp):
         cursor.execute(table_creator)
 
         input_execute = """INSERT OR IGNORE INTO '"""+ book +"""'"""+"""VALUES(?,?,?)"""
-        if now_time[0]:
-            update_execute = """UPDATE '""" + book + """' SET 'win'='win'+1 WHERE 'time'=?"""
+        if inf_status[0]:
+            update_execute = """UPDATE \"""" + book + """\" SET \"win\"=\"win\"+1 WHERE \"time\"=?"""
         else:
-            update_execute = """UPDATE '""" + book + """' SET 'lose'='lose'+1 WHERE 'time'=?"""
+            update_execute = """UPDATE \"""" + book + """\" SET \"lose\"=\"lose\"+1 WHERE \"time\"=?"""
 
         start = time.time()
 
@@ -191,6 +190,10 @@ class Main(MDApp):
             return size // 7 + 1
 
 
+    def add_statistic(self):
+        pprint(self.statistic.week()) # [dict(date : [win, lose]) , bool]
+        self.load_stats_triger = True
+
 
     #START FOR zone with swap and bind internal book screen
     def swap_screen(self,screen_name_index,*name_book):
@@ -199,6 +202,14 @@ class Main(MDApp):
             if index of screen = ('5') need get book name'''
         screen_name = self.screens
         setattr(self.root,"current" ,screen_name[int(screen_name_index[0])-1])
+
+        if screen_name_index[0] == '2':
+            self.statistic = Statistic()
+            self.statistic.get_data()
+            if not self.load_stats_triger:
+                self.add_statistic()
+
+
         if screen_name_index[0] == '5':
             self.clear_internal_screen()
             self.root.get_screen("bookInternal").ids.search_field.hint_text = f"Search in {name_book[0]}"

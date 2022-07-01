@@ -1,5 +1,128 @@
 from kivy.uix.screenmanager import Screen
 
+import time
+from datetime import date
+import sqlite3
+from pprint import pprint
+
+
+class Statistic:
+    information = []
+
+    def week(self):
+        n_day = 0
+        now_date = date.today()
+        now_time = now_date.strftime("""%d %m %Y""") # 'xx yy zz'
+        now_time_cut = now_time.split()
+        week_days = []
+
+        if int(now_time.split()[0]) >= 7:
+            for day in range(7):
+                numday = str(int(now_time_cut[0])-day)
+                week_days.append( numday + " " + now_time_cut[1] + " " + now_time_cut[2] )
+
+        else:
+            for day in range(int(now_time.split()[0])):
+                numday = str(int(now_time_cut[0])-day) if len(str(int(now_time_cut[0])-day)) == 2 else "0" + str(int(now_time_cut[0])-day) 
+
+                week_days.append( numday + " " + now_time_cut[1] + " " + now_time_cut[2] )
+            if now_time_cut[1] != '01':
+                for day in range(7-int(now_time.split()[0])):
+                    if now_date.month % 2 == 1:
+                        n_day = 31
+                    elif now_date.month == 2:
+                        if now_date.year % 4 == 0:
+                            n_day = 29
+                        else:
+                            n_day = 28
+                    else:
+                        n_day = 30
+
+                    numday =   str(int(n_day)-day) if len(str(int(n_day)-day)) == 2 else "0" + str(int(n_day)-day) 
+                    nummunth = str(int(now_time_cut[1])-1) if len(str(int(now_time_cut[1])-1)) == 2 else  "0" + str(int(now_time_cut[1])-1)
+
+                    week_days.append( numday + " " + nummunth + " " + now_time_cut[2] )
+
+            else:
+                for day in range(7-int(now_time.split()[0])):
+                    if now_date.month % 2 == 1:
+                        n_day = 31
+                    elif now_date.month == 2:
+                        if now_date.year % 4 == 0:
+                            n_day = 29
+                        else:
+                            n_day = 28
+                    else:
+                        n_day = 30
+
+                    numday =   str(int(n_day)-day) if len(str(int(n_day)-day)) == 2 else "0" + str(int(n_day)-day) 
+                    nummunth = str(12) if len(str(12)) == 2 else  "0" + str(12)
+                    numyear =  str(int(now_time_cut[2])-1)
+
+                    week_days.append( numday + " " + nummunth + " " + numyear)
+
+        week_stats_information = {}
+        for day in week_days:
+            if day in self.information.keys():
+                week_stats_information.update({ day:self.information[day] })
+
+        return week_stats_information
+
+
+    
+
+    def today(self):
+        now_time = date.today()
+        now_time = now_time.strftime("""%d %m %Y""")
+        if now_time in self.information.keys():
+            if len(self.information)>0: 
+                return [self.information[now_time],True]
+
+        else:
+            if len(self.information)>0: 
+                return [self.information[now_time],True]
+
+
+    def get_first_book(self):
+        start = time.time()
+        conn = sqlite3.connect("Data/Base/Books.db")
+        get_book_execute = "SELECT db_name,size FROM \"Data_name_of_books\""
+
+        cursor = conn.cursor()
+        data = cursor.execute(get_book_execute)      
+        data = data.fetchall()
+        point = [0,0] 
+        for index,i in enumerate(data):
+            if i[1] > point[0]:
+                point[0] = i[1]
+                point[1] = index
+        
+        conn.close()
+        print(f"[Log   ] geted infor from \'{'Data_name_of_book'}\' {time.time()-start}")
+
+        return data[point[1]]
+
+
+    def get_data(self):
+
+        now_time = date.today()
+        now_time = now_time.strftime("""%d %m %Y""")
+
+    
+        name  = self.get_first_book()
+        start = time.time()
+        get_stats_execute = "SELECT * FROM \"" + name[0] + "\""
+
+        conn = sqlite3.connect("Data/Base/Statistic.db")
+        cursor = conn.cursor()
+        data = cursor.execute(get_stats_execute)
+        self.information = data.fetchall()
+        self.information = { self.information[i][0] : [self.information[i][1], self.information[i][2]] for i in range(len(self.information))}
+        conn.close()
+        print(f"[Log   ] geted infor from \'{name[0]}\' {time.time()-start}")
+
 
 class StatisticScreen(Screen):
-    pass
+    pass    
+
+
