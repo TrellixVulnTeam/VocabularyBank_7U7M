@@ -1,4 +1,6 @@
 from kivy.uix.screenmanager import Screen
+from kivymd.uix.menu import MDDropdownMenu
+from kivy.metrics import sp
 
 import time
 from datetime import date
@@ -65,6 +67,10 @@ class Statistic:
         for day in week_days:
             if day in self.information.keys():
                 week_stats_information.update({ day:self.information[day] })
+            else:
+                week_stats_information.update({ day:[0,0] })
+
+            
 
         return week_stats_information
 
@@ -110,6 +116,7 @@ class Statistic:
 
     
         name  = self.get_first_book()
+        self.name_db = name
         start = time.time()
         get_stats_execute = "SELECT * FROM \"" + name[0] + "\""
 
@@ -123,6 +130,42 @@ class Statistic:
 
 
 class StatisticScreen(Screen):
-    pass    
+
+    def get_book_from_db(self):
+        get_execute = "SELECT * FROM 'Data_name_of_books'"
+        conn = sqlite3.connect("Data/Base/Books.db")
+        cursor = conn.cursor()
+        data_db = cursor.execute(get_execute)
+        return data_db.fetchall()
+
+
+    def menu_start(self):
+        book_items = self.get_book_from_db()
+        menu_items = [
+            {
+                "text": f"{item[0]}",
+                "viewclass": "OneLineListItem",
+                "on_release": lambda x=f"{item[0]}": self.menu_callback(x),
+                "width": sp(120)
+            } for item in book_items
+            ]
+        self.menu = MDDropdownMenu(
+            caller=self.ids.menu,
+            items=menu_items,
+            width_mult=4,
+            radius=[6, 6, 6, 6],
+            position="bottom",
+            ver_growth="up",
+            hor_growth="right",
+            max_height=sp(200)
+        )
+
+        self.menu.open()
+    pass 
+
+
+    def menu_callback(self, book_name):
+        self.ids.menu.text = book_name
+        self.menu.dismiss()
 
 

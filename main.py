@@ -1,4 +1,3 @@
-import statistics
 import time
 from datetime import date
 import sqlite3
@@ -30,6 +29,10 @@ from kivy.utils import get_color_from_hex
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
 from kivy.properties import ColorProperty
+
+
+from kivy.garden.matplotlib import FigureCanvasKivyAgg
+import matplotlib.pyplot as plt
 
 #include programclasses
 
@@ -191,7 +194,28 @@ class Main(MDApp):
 
 
     def add_statistic(self):
-        pprint(self.statistic.week()) # [dict(date : [win, lose]) , bool]
+        plt.figure(figsize=(9,3))
+        weekdata = self.statistic.week() # [dict(date : [win, lose]) , bool]
+        height = []
+        tick_label = list(weekdata.keys())
+        for i in tick_label:
+            height.append(weekdata[i][0])
+
+        left = [i+1 for i in range(len(tick_label))]
+        tick_label = [ i[:2]+"-"+i[3:5] for i in list(weekdata.keys())]
+        pprint(height)
+        pprint(tick_label)
+        plt.bar(left, height, tick_label = tick_label,
+        width = 0.8, color = ['green'])
+        
+        # naming the x-axis
+        plt.xlabel('Days')
+        # naming the y-axis
+        plt.ylabel('Wins')
+        # plot title
+        plt.title(f'Simple regime of {self.statistic.name_db[0]}')
+        self.root.get_screen("statistic").ids.graf_widget.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
         self.load_stats_triger = True
 
 
