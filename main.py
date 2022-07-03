@@ -3,6 +3,7 @@ from datetime import date
 import sqlite3
 
 from pprint import pprint
+from turtle import color
 from Libs.programclass.Screens.LearnScreen import LearnScreen
 from kivymd.app import MDApp
 from kivymd.uix.list import ThreeLineAvatarIconListItem,IconLeftWidget,IconRightWidget
@@ -65,6 +66,11 @@ class Main(MDApp):
     text_file_colors_hint = "#8B8B6F"
     text_file_colors = "#F6F6C4"
 
+    bar_win_line_color = "#85BB65"
+
+    diagram_facecolor = "#F6F6DC"
+    diagram_facecolor_borderside = "#212121"
+
 
 
     data = ''
@@ -111,6 +117,8 @@ class Main(MDApp):
         Builder.load_file("Libs//uix//kv//modules//RundomRegime.kv")
         Builder.load_file("Libs//uix//kv//modules//CustomBooksListElement.kv")
         Builder.load_file("Libs//uix//kv//modules//CustomBooksList.kv")
+        Builder.load_file("Libs//uix//kv//modules//Menu.kv")
+
 
 
         self.screens = ['menu','statistic','books','edit','bookInternal','learn']
@@ -193,8 +201,12 @@ class Main(MDApp):
             return size // 7 + 1
 
 
-    def add_statistic(self):
-        plt.figure(figsize=(9,3))
+    def add_statistic_pool(self):
+        fig = plt.figure(figsize=(9,3))
+        fig.patch.set_facecolor(self.diagram_facecolor_borderside)
+        ax = plt.gca()
+        ax.set_facecolor(self.diagram_facecolor)
+
         weekdata = self.statistic.week() # [dict(date : [win, lose]) , bool]
         height = []
         tick_label = list(weekdata.keys())
@@ -206,14 +218,27 @@ class Main(MDApp):
         pprint(height)
         pprint(tick_label)
         plt.bar(left, height, tick_label = tick_label,
-        width = 0.8, color = ['green'])
+        width = 0.8, color = ['#21B82A'])
         
+        axs = fig.add_subplot(111)
+
+        ax.spines['left'].set_color(self.bg_screens_border_color)
+        ax.spines['right'].set_color(self.bg_screens_border_color)
+        ax.spines['bottom'].set_color(self.bg_screens_border_color)
+        ax.spines['top'].set_color(self.bg_screens_border_color)
+
+        axs.xaxis.label.set_color(self.icon_but_colors)
+        axs.yaxis.label.set_color(self.icon_but_colors)
+
+        axs.tick_params(axis='x', colors=self.icon_but_colors)      
+        axs.tick_params(axis='y', colors=self.icon_but_colors)        
+
         # naming the x-axis
-        plt.xlabel('Days')
+        plt.xlabel('Days',color=self.icon_but_colors)
         # naming the y-axis
-        plt.ylabel('Wins')
+        plt.ylabel('Wins',color=self.icon_but_colors)
         # plot title
-        plt.title(f'Simple regime of {self.statistic.name_db[0]}')
+        plt.title(f'Simple regime of {self.statistic.name_db[0]}',color=self.icon_but_colors)
         self.root.get_screen("statistic").ids.graf_widget.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
         self.load_stats_triger = True
@@ -231,7 +256,7 @@ class Main(MDApp):
             self.statistic = Statistic()
             self.statistic.get_data()
             if not self.load_stats_triger:
-                self.add_statistic()
+                self.add_statistic_pool()
 
 
         if screen_name_index[0] == '5':

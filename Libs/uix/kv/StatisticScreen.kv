@@ -80,18 +80,18 @@
             size_hint_y: 0.12
             size_hint_x: 1
             orientation: "horizontal"
-            BoxLayout:
+            FloatLayout:
+
                 size_hint_y: 0.96
                 size_hint_x:1
                 id: select_book_and_regime
                 pos_hint: {'center_x': 0.5, 'top':1}
-                orientation: "horizontal"
                 MDFlatButton:
-                    pos_hint: {'center_x':0.5,'center_y': 0.5}
+                    pos_hint: {'center_x':0.3,'center_y': 0.5}
                     font_size: 20
                     canvas.before:
                         Color:
-                            rgba: hex('#F2F3F4')
+                            rgba: hex(app.icon_but_colors)
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
@@ -103,29 +103,74 @@
 
                 MDFlatButton:
                     id: regimes
-                    pos_hint: {'center_x':0.5,'center_y':0.5}
+                    pos_hint: {'center_x':0.7,'center_y':0.5}
                     font_size: 20
                     canvas.before:
                         Color:
-                            rgba: hex('#F2F3F4')
+                            rgba: hex(app.icon_but_colors)
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
                             radius: [2,2]
                     text: "Select regimes"
-                    on_release: root.menu_start()
+                    on_release: root.menu_regime_start()
 
         BoxLayout:
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            size_hint_y: 0.7
-            size_hint_x: 1
+            size_hint_y: 0.69
+            size_hint_x: 0.92
             orientatio: "vertical"
             id:graf_widget
 
 
 
-
+        BoxLayout:
+            pos_hint: {'center_x': 0.5, "bottom":1}
+            size_hint_y: 0.01
+            size_hint_x: 1
+            orientatio: "vertical"
 
 
 
         CustomBottomNavigation:
+
+
+
+<StatisticSelectDropDown>:
+    max_height: "250sp"
+    canvas.before:
+        Color:
+            rgba: hex(app.bg_screens_color)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [2,2]
+
+
+<StatisticSelectDropDownElement>:
+    theme_text_color: "Custom"
+    text_color: hex(app.bg_screens_color)
+    size_hint_y: None
+    height: 60
+    font_size: 42
+    halign:"center"
+
+    BoxLayout:
+        size_hint_x: 0.96
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDLabel:
+            theme_text_color: "Custom"
+            text_color: hex(app.label_text_colors)
+            size_hint_x: 0.8
+            font_size: 24
+            halign: "center"
+            size_hint_y: 1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            canvas.before:
+                Color:
+                    rgba: hex(app.bg_screens_whitly_color)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            text: ""
