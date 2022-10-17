@@ -1,6 +1,16 @@
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.menu import MDDropdownMenu
+
+
+
 from kivy.metrics import sp
+from kivy.utils import get_color_from_hex
+from kivy.uix.dropdown import DropDown
+
+
+from Libs.programclass.modules.Menu import CustomMenu
+
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.behaviors.button import ButtonBehavior
 
 import time
 from datetime import date
@@ -10,7 +20,6 @@ from pprint import pprint
 
 class Statistic:
     information = []
-
     def week(self):
         n_day = 0
         now_date = date.today()
@@ -130,7 +139,17 @@ class Statistic:
 
 
 class StatisticScreen(Screen):
-
+    bg_screens_border_color = "313131"
+    bg_screens_color = "#141414"
+    bg_screens_whitly_color = "212121"
+    icon_but_colors = "#F6F6C4"
+    icon_but_colors_hint = "#8B8B6F"
+    label_text_colors = "#F6F6C4"
+    label_text_colors_hint = "#8B8B6F"
+    label_text_colors_hint_hint = "#77775F"
+    text_file_colors_hint = "#8B8B6F"
+    text_file_colors = "#F6F6C4"
+    
     def get_book_from_db(self):
         get_execute = "SELECT * FROM 'Data_name_of_books'"
         conn = sqlite3.connect("Data/Base/Books.db")
@@ -144,28 +163,79 @@ class StatisticScreen(Screen):
         menu_items = [
             {
                 "text": f"{item[0]}",
-                "viewclass": "OneLineListItem",
+                "viewclass": "MenuElement",
                 "on_release": lambda x=f"{item[0]}": self.menu_callback(x),
-                "width": sp(120)
+                "width": sp(95),
             } for item in book_items
             ]
-        self.menu = MDDropdownMenu(
+        self.menu = CustomMenu(
+            background_color=get_color_from_hex(self.bg_screens_whitly_color),
+            width_mult=3,
+            radius=[6, 6, 6, 6],
             caller=self.ids.menu,
             items=menu_items,
-            width_mult=4,
-            radius=[6, 6, 6, 6],
-            position="bottom",
-            ver_growth="up",
-            hor_growth="right",
-            max_height=sp(200)
         )
 
         self.menu.open()
-    pass 
+
+
+    def change_diagram(self, element, types):
+        if types == "book":
+            self.new_diagram_with_book(element)
+        elif types == "regimes":
+            self.new_diagram_with_regimes()
+        else:
+            pass
+
+
 
 
     def menu_callback(self, book_name):
-        self.ids.menu.text = book_name
+        if self.ids.menu.text != book_name:
+            self.ids.menu.text = book_name
+            self.change_diagram(book_name,"book")
+
         self.menu.dismiss()
 
 
+    def menu_regime_callback(self,regimes):
+        if self.ids.regimes.text != regimes:
+            self.ids.regimes.text = regimes
+            self.change_diagram(regimes,"regime")
+
+
+        self.menu_regime.dismiss()
+
+
+    def menu_regime_start(self):
+        book_items = ['simple','rundom']
+        menu_items = [
+            {
+                "text": f"{item}",
+                "viewclass": "MenuElement",
+                "on_release": lambda x=f"{item}": self.menu_regime_callback(x),
+                "width": sp(95)
+            } for item in book_items
+            ]
+        self.menu_regime = CustomMenu(
+            background_color=get_color_from_hex(self.bg_screens_whitly_color),
+            width_mult=3,
+            radius=[6, 6, 6, 6],
+            caller=self.ids.regimes,
+            items=menu_items,
+        )
+
+
+        self.menu_regime.open()
+
+
+
+
+class StatisticSelectDropDown(DropDown):
+    pass
+
+
+class StatisticSelectDropDownElement(BoxLayout, ButtonBehavior):
+
+    def pe(self):
+        pprint(self)
