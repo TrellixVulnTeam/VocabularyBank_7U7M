@@ -1,10 +1,8 @@
 from pprint import pprint
+from turtle import width
 
-
-from kivy.utils import get_color_from_hex
-
-
-from Libs.programclass.modules.Menu import CustomMenu
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.boxlayout import MDBoxLayout
 
 from kivy.animation import Animation
 from kivy.metrics import sp
@@ -22,16 +20,6 @@ import random
 
 
 class LearnScreen(Screen):
-    bg_screens_border_color = "313131"
-    bg_screens_color = "#141414"
-    bg_screens_whitly_color = "212121"
-    icon_but_colors = "#F6F6C4"
-    icon_but_colors_hint = "#8B8B6F"
-    label_text_colors = "#F6F6C4"
-    label_text_colors_hint = "#8B8B6F"
-    label_text_colors_hint_hint = "#77775F"
-    text_file_colors_hint = "#8B8B6F"
-    text_file_colors = "#F6F6C4"
     back_button_size = StringProperty("46sp")
     regime_name = ""
     get_out = True
@@ -58,17 +46,20 @@ class LearnScreen(Screen):
         menu_items = [
             {
                 "text": f"{item[0]}",
-                "viewclass": "MenuElement",
+                "viewclass": "OneLineListItem",
                 "on_release": lambda x=f"{item[0]}": self.menu_callback(x),
-                "width": sp(95)
+                "width": sp(120)
             } for item in book_items
             ]
-        self.menu = CustomMenu(
-            background_color=get_color_from_hex(self.bg_screens_whitly_color),
+        self.menu = MDDropdownMenu(
             caller=self.ids.menu,
             items=menu_items,
-            width_mult=3,
+            width_mult=4,
             radius=[6, 6, 6, 6],
+            position="bottom",
+            ver_growth="up",
+            hor_growth="right",
+            max_height=sp(200)
         )
 
         self.menu.open()
